@@ -5,8 +5,14 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TabHost;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import aynimake.com.miscontactos.util.Contacto;
 import aynimake.com.miscontactos.util.TextChangedListener;
 //import android.view.Menu;
 //import android.view.MenuItem;
@@ -15,6 +21,8 @@ import aynimake.com.miscontactos.util.TextChangedListener;
 public class MainActivity extends ActionBarActivity {
 
     private EditText txtNombre, txtTelefono, txtEmail, txtDireccion;
+    private List<Contacto> contactos = new ArrayList<Contacto>();
+    private ListView contactsListView;
     private Button btnAgregar;
 
 
@@ -24,6 +32,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         inicializarComponentesUI();
+        inicializarTabs();
     }
 
     private void inicializarComponentesUI() {
@@ -31,6 +40,8 @@ public class MainActivity extends ActionBarActivity {
         txtTelefono = (EditText) findViewById(R.id.cmpTelefono);
         txtEmail = (EditText) findViewById(R.id.cmpEmail);
         txtDireccion = (EditText) findViewById(R.id.cmpDireccion);
+
+        contactsListView = (ListView) findViewById(R.id.lvContactos);
 
         //
         txtNombre.addTextChangedListener(new TextChangedListener() {
@@ -60,5 +71,25 @@ public class MainActivity extends ActionBarActivity {
         //Devolver el Foco al campo "txtNombre"
         txtNombre.requestFocus();
     }
+
+
+    private void inicializarTabs() {
+        TabHost tabHost = (TabHost) findViewById(R.id.tabHost);
+        tabHost.setup();
+
+        // Tab1 :  Crear
+        TabHost.TabSpec spec = tabHost.newTabSpec("tab1");
+        spec.setContent(R.id.tab1);
+        spec.setIndicator("Crear");
+        tabHost.addTab(spec);
+        // Tab2 :  Lista
+        spec = tabHost.newTabSpec("tab2");
+        spec.setContent(R.id.tab2);
+        spec.setIndicator("Lista");
+        tabHost.addTab(spec);
+
+
+    }
+
 
 }

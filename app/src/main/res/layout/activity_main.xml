@@ -43,7 +43,7 @@
         android:id="@+id/cmpEmail"
         android:layout_below="@+id/cmpTelefono"
         android:layout_centerHorizontal="true"
-        android:hint="Correo Eléctronico" />
+        android:hint="Correo Electronico" />
 
     <EditText
         android:layout_width="fill_parent"
@@ -62,5 +62,6 @@
         android:id="@+id/bAgregar"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:textAllCaps="false" />
+        android:textAllCaps="false"
+        android:onClick="onClick"/>
 </RelativeLayout>

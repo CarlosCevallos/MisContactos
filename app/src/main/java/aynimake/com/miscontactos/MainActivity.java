@@ -1,17 +1,21 @@
 package aynimake.com.miscontactos;
 
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import aynimake.com.miscontactos.util.ContactListAdapter;
 import aynimake.com.miscontactos.util.Contacto;
 import aynimake.com.miscontactos.util.TextChangedListener;
 //import android.view.Menu;
@@ -21,9 +25,13 @@ import aynimake.com.miscontactos.util.TextChangedListener;
 public class MainActivity extends ActionBarActivity {
 
     private EditText txtNombre, txtTelefono, txtEmail, txtDireccion;
-    private List<Contacto> contactos = new ArrayList<Contacto>();
+    //-- La siguiente linea se reemplaza por la siguiente linea ("ArrayAdapter<Contacto>")
+    //private List<Contacto> contactos = new ArrayList<Contacto>();
+    private ArrayAdapter<Contacto> adapter;
     private ListView contactsListView;
+    private ImageView imgViewContacto;
     private Button btnAgregar;
+    private int request_code = 1;
 
 
     @Override
@@ -32,7 +40,13 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         inicializarComponentesUI();
+        inicializarListaContactos();
         inicializarTabs();
+    }
+
+    private void inicializarListaContactos() {
+        adapter = new ContactListAdapter(this, new ArrayList<Contacto>());
+        contactsListView.setAdapter(adapter);
     }
 
     private void inicializarComponentesUI() {
@@ -66,16 +80,12 @@ public class MainActivity extends ActionBarActivity {
         Toast.makeText(this, msj, Toast.LENGTH_SHORT).show();
 
         btnAgregar.setEnabled(false);
-        inicializarListaContactos();
         limpiarCampos();
     }
 
-    private void inicializarListaContactos() {
-
-    }
-
     private void agregarContacto(String nombre, String telefono, String email, String direccion) {
-        contactos.add(new Contacto(nombre, telefono, email, direccion) );
+        Contacto nuevo = new Contacto(nombre, telefono, email, direccion);
+        adapter.add(nuevo);
     }
 
     private void limpiarCampos() {
@@ -103,9 +113,25 @@ public class MainActivity extends ActionBarActivity {
         spec.setContent(R.id.tab2);
         spec.setIndicator("Lista");
         tabHost.addTab(spec);
-
-
     }
 
 
+    public void onImgClick(View view) {
+        Intent intent = null;
+
+        /* Verificamos la version de la plataforma
+           ...a partir de la v4.4 Kikat (api 19) cambio la seguridad.
+        */
+        if (Build.VERSION.SDK_INT < 19) {
+            // Android JellyBean 4.3 y anteriores
+            intent = new Intent();
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+        } else {
+            // Android Kitkat 4.4 y posteriores
+            intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+        }
+        intent.setType("image/*");
+        startActivityForResult(intent, request_code);
+    }
 }

@@ -55,11 +55,27 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void onClick(View view) {
+        agregarContacto(
+                txtNombre.getText().toString().trim(),
+                txtTelefono.getText().toString().trim(),
+                txtEmail.getText().toString().trim(),
+                txtDireccion.getText().toString().trim()
+        );
+
         String msj = String.format("%s ha sido agregado a la lista!", txtNombre.getText());
         Toast.makeText(this, msj, Toast.LENGTH_SHORT).show();
 
         btnAgregar.setEnabled(false);
+        inicializarListaContactos();
         limpiarCampos();
+    }
+
+    private void inicializarListaContactos() {
+
+    }
+
+    private void agregarContacto(String nombre, String telefono, String email, String direccion) {
+        contactos.add(new Contacto(nombre, telefono, email, direccion) );
     }
 
     private void limpiarCampos() {

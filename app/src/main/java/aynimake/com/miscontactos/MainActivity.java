@@ -1,6 +1,7 @@
 package aynimake.com.miscontactos;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -57,6 +58,8 @@ public class MainActivity extends ActionBarActivity {
 
         contactsListView = (ListView) findViewById(R.id.lvContactos);
 
+        imgViewContacto = (ImageView) findViewById(R.id.imgViewContacto);
+
         //
         txtNombre.addTextChangedListener(new TextChangedListener() {
             @Override
@@ -73,7 +76,8 @@ public class MainActivity extends ActionBarActivity {
                 txtNombre.getText().toString().trim(),
                 txtTelefono.getText().toString().trim(),
                 txtEmail.getText().toString().trim(),
-                txtDireccion.getText().toString().trim()
+                txtDireccion.getText().toString().trim(),
+                (Uri) imgViewContacto.getTag()  // Obtenemos el atributo TAG con la Uri de la Imagen
         );
 
         String msj = String.format("%s ha sido agregado a la lista!", txtNombre.getText());
@@ -83,8 +87,8 @@ public class MainActivity extends ActionBarActivity {
         limpiarCampos();
     }
 
-    private void agregarContacto(String nombre, String telefono, String email, String direccion) {
-        Contacto nuevo = new Contacto(nombre, telefono, email, direccion);
+    private void agregarContacto(String nombre, String telefono, String email, String direccion, Uri imageUri) {
+        Contacto nuevo = new Contacto(nombre, telefono, email, direccion, imageUri);
         adapter.add(nuevo);
     }
 
@@ -93,6 +97,8 @@ public class MainActivity extends ActionBarActivity {
         txtTelefono.getText().clear();
         txtEmail.getText().clear();
         txtDireccion.getText().clear();
+        //Reestablecemos la imagen predeterminada del contacto
+        imgViewContacto.setImageResource(R.drawable.contacto);
 
         //Devolver el Foco al campo "txtNombre"
         txtNombre.requestFocus();
@@ -133,5 +139,14 @@ public class MainActivity extends ActionBarActivity {
         }
         intent.setType("image/*");
         startActivityForResult(intent, request_code);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == request_code) {
+            imgViewContacto.setImageURI(data.getData());
+            // Utilizamos el atributo TAG para almacenar la Uri al archivo seleccionado
+            imgViewContacto.setTag(data.getData());
+        }
     }
 }

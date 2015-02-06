@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -49,5 +50,9 @@ public class ContactListAdapter extends ArrayAdapter<Contacto> {
         textView = (TextView) view.findViewById(R.id.viewDireccion);
         textView.setText(actual.getDireccion());
 
+
+        //Foto del Contacto   (esto deberia estar en otro proceso)
+        ImageView ivFotoContacto = (ImageView) view.findViewById(R.id.ivFotoContacto);
+        ivFotoContacto.setImageURI(actual.getImageUri());
     }
 }

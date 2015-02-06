@@ -45,17 +45,17 @@
                         android:layout_alignParentTop="true"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="15dp"
-                        android:layout_gravity="center_horizontal"
-                        android:src="@drawable/contacto"
-                        android:onClick="onImgClick"/>
+                        android:layout_gravity="center_horizontal"/>
 
                     <ImageView
                         android:layout_width="96dp"
                         android:layout_height="96dp"
-                        android:id="@+id/imageView"
+                        android:id="@+id/imgViewContacto"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="10dp"
-                        android:scaleType="fitCenter"/>
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/contacto"
+                        android:onClick="onImgClick"/>
 
                     <EditText
                         android:layout_width="fill_parent"
@@ -108,7 +108,8 @@
                         android:textAllCaps="false"
                         android:onClick="onClick"
                         android:layout_marginTop="15dp"
-                        android:layout_gravity="center_horizontal"/>
+                        android:layout_gravity="center_horizontal"
+                        android:enabled="false"/>
                 </LinearLayout>
 
                 <LinearLayout

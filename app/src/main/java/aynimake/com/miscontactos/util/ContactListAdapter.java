@@ -1,6 +1,7 @@
 package aynimake.com.miscontactos.util;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -53,6 +54,6 @@ public class ContactListAdapter extends ArrayAdapter<Contacto> {
 
         //Foto del Contacto   (esto deberia estar en otro proceso)
         ImageView ivFotoContacto = (ImageView) view.findViewById(R.id.ivFotoContacto);
-        ivFotoContacto.setImageURI(actual.getImageUri());
+        ivFotoContacto.setImageURI(Uri.parse(actual.getImageUri()));
     }
 }

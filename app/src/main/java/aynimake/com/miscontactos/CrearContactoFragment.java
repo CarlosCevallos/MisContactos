@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import aynimake.com.miscontactos.util.ContactReceiver;
 import aynimake.com.miscontactos.util.Contacto;
 import aynimake.com.miscontactos.util.TextChangedListener;
 
@@ -91,7 +92,12 @@ public class CrearContactoFragment extends Fragment implements View.OnClickListe
 
     private void agregarContacto(String nombre, String telefono, String email, String direccion, String imageUri) {
         Contacto nuevo = new Contacto(nombre, telefono, email, direccion, imageUri);
-        //TODO: corregir adapter.add(nuevo);
+
+        Intent intent = new Intent("listacontactos");
+        intent.putExtra("operacion", ContactReceiver.CONTACTO_AGREGADO);
+        intent.putExtra("datos", nuevo);
+
+        getActivity().sendBroadcast(intent);
     }
 
     private void limpiarCampos() {

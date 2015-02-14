@@ -83,5 +83,4 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     }
     //</editor-fold>
 
-
 }

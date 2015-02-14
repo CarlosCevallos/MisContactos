@@ -3,7 +3,7 @@ package aynimake.com.miscontactos.util;
 import java.io.Serializable;
 
 /**
- * Created by Toshiba on 03/02/2015.
+ * Created by Toshiba CCC on 03/02/2015.
  */
 public class Contacto implements Serializable {
     private String nombre, telefono, email, direccion;

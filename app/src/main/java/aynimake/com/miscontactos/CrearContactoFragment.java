@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +26,6 @@ public class CrearContactoFragment extends Fragment implements View.OnClickListe
     private Button btnAgregar;
     private int request_code = 1;
 
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_crear_contacto, container, false);
@@ -42,16 +40,17 @@ public class CrearContactoFragment extends Fragment implements View.OnClickListe
         txtDireccion = (EditText) view.findViewById(R.id.cmpDireccion);
 
         imgViewContacto = (ImageView) view.findViewById(R.id.imgViewContacto);
+        imgViewContacto.setOnClickListener(this);
 
         //
         txtNombre.addTextChangedListener(new TextChangedListener() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                btnAgregar = (Button) view.findViewById(R.id.bAgregar);
                 btnAgregar.setEnabled(!s.toString().trim().isEmpty());
             }
         });
-
+        btnAgregar = (Button) view.findViewById(R.id.bAgregar);
+        btnAgregar.setOnClickListener(this);
     }
 
     @Override

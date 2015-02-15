@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 
 import aynimake.com.miscontactos.util.TabsPagerAdapter;
+// Deshabilito por replicar el codigo del tutorial
 //import android.view.Menu;
 //import android.view.MenuItem;
 

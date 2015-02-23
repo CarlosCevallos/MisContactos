@@ -67,6 +67,9 @@ public class CrearContactoFragment extends Fragment implements View.OnClickListe
             String msj = String.format("%s ha sido agregado a la lista!", txtNombre.getText());
             Toast.makeText(view.getContext(), msj, Toast.LENGTH_SHORT).show();
 
+            msj = "Imagen: "+ String.valueOf(imgViewContacto.getTag());
+            Toast.makeText(view.getContext(), msj, Toast.LENGTH_LONG).show();
+
             btnAgregar.setEnabled(false);
             limpiarCampos();
         } else if (view == imgViewContacto){

@@ -1,14 +1,40 @@
 package aynimake.com.miscontactos.util;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.io.Serializable;
 
-/**
- * Created by Toshiba (CCC) on 03/02/2015.
- */
+@DatabaseTable(tableName = "contacto")
 public class Contacto implements Serializable {
-    private String nombre, telefono, email, direccion;
-    private String imageUri;    // No es posible Serializar objetos Uri
 
+    @DatabaseField(generatedId = true)
+    private int id;     // Primary Key
+
+    @DatabaseField(index = true, canBeNull = false)
+    private String nombre;
+
+    @DatabaseField
+    private String telefono;
+
+    @DatabaseField
+    private String email;
+
+    @DatabaseField
+    private String direccion;
+
+    @DatabaseField
+    private String imageUri;
+
+    // No es posible Serializar objetos Uri
+    // Ejemplo con Objeto Uri
+    // @DatabaseField(persisterClass = /* Clase para convertir objeto Uri a String */)
+
+
+    /* El motor ORMLite requiere este constructor vacio para poder instanciar objetos de esta clase
+       por medio del API de Reflection  */
+    public Contacto() {
+    }
 
     public Contacto(String nombre, String telefono, String email, String direccion, String imageUri) {
         this.nombre = nombre;
@@ -16,9 +42,14 @@ public class Contacto implements Serializable {
         this.email = email;
         this.direccion = direccion;
         this.imageUri = imageUri;
+        this.direccion = imageUri;  //TCUTT borrame
     }
 
     //<editor-fold desc="GETTER METHODS">
+    public int getId() {
+        return id;
+    }
+
     public String getNombre() {
         return nombre;
     }
@@ -59,6 +90,7 @@ public class Contacto implements Serializable {
     //</editor-fold>
 
 
+    //<editor-fold desc="METODOS EQUALS Y HASHCODE">
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -87,4 +119,6 @@ public class Contacto implements Serializable {
         result = 31 * result + (imageUri != null ? imageUri.hashCode() : 0);
         return result;
     }
+    //</editor-fold>
+
 }

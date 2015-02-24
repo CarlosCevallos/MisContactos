@@ -1,5 +1,6 @@
 package aynimake.com.miscontactos;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -14,11 +15,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
+
 import java.util.ArrayList;
 
 import aynimake.com.miscontactos.util.ContactListAdapter;
 import aynimake.com.miscontactos.util.ContactReceiver;
 import aynimake.com.miscontactos.util.Contacto;
+import aynimake.com.miscontactos.util.DatabaseHelper;
 
 /**
  * Created by Toshiba on 11/02/2015.
@@ -40,7 +45,7 @@ public class ListaContactosFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        receiver = new ContactReceiver(adapter);
+        receiver = new ContactReceiver(adapter, getOrmLiteBaseActivity());
         getActivity().registerReceiver(receiver, new IntentFilter("listacontactos"));
     }
 
@@ -54,9 +59,23 @@ public class ListaContactosFragment extends Fragment {
         contactsListView = (ListView) view.findViewById(R.id.lvListaContactosflc);
         adapter = new ContactListAdapter(getActivity(), new ArrayList<Contacto>());
 
+        OrmLiteBaseActivity<DatabaseHelper> activity = getOrmLiteBaseActivity();
+        if (activity != null) {
+            DatabaseHelper helper = activity.getHelper();
+            RuntimeExceptionDao<Contacto, Integer> dao = helper.getContactoRuntimeDAO();
+            adapter.addAll(dao.queryForAll());
+        }
+
         // Se configura para que el "adapter" notifique cambios en el "dataset" automaticamente
         adapter.setNotifyOnChange(true);
         contactsListView.setAdapter(adapter);
+    }
+
+    private OrmLiteBaseActivity<DatabaseHelper> getOrmLiteBaseActivity(){
+        Activity activity = getActivity();
+        if ( activity instanceof OrmLiteBaseActivity)
+            return (OrmLiteBaseActivity<DatabaseHelper>) activity;
+        return null;
     }
 
     @Override

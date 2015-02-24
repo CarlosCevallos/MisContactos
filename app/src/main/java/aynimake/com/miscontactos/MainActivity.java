@@ -4,13 +4,16 @@ import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
 
+import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
+
+import aynimake.com.miscontactos.util.DatabaseHelper;
 import aynimake.com.miscontactos.util.TabsPagerAdapter;
 
 
 
-public class MainActivity extends ActionBarActivity implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
+public class MainActivity extends OrmLiteBaseActivity<DatabaseHelper>
+        implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
 
     // Control de Fichas (tabs)
     private ViewPager viewPager;

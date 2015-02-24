@@ -4,6 +4,8 @@ import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
+import android.view.View;
 
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 
@@ -17,11 +19,7 @@ public class MainActivity extends OrmLiteBaseActivity<DatabaseHelper>
 
     // Control de Fichas (tabs)
     private ViewPager viewPager;
-    private TabsPagerAdapter adapter;
     private ActionBar actionBar;
-
-    // Titulos de las fichas
-    private String[] titulos = {"Crear Contacto","Lista de Contactos"};
 
 
     @Override
@@ -33,21 +31,31 @@ public class MainActivity extends OrmLiteBaseActivity<DatabaseHelper>
     }
 
     private void inicializarTabs() {
-        viewPager = (ViewPager) findViewById(R.id.pager);
-        actionBar = getActionBar();
-        adapter = new TabsPagerAdapter(getFragmentManager());
 
-        viewPager.setAdapter(adapter);
-        actionBar.setHomeButtonEnabled(false);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        View view = findViewById(R.id.pager);  // El mismo id carga el xml de la "tablet" y el del "phone"
+        String viewTag = String.valueOf(view.getTag());
+        Log.d(getClass().getSimpleName(), String.format("Layout: %s", viewTag));
 
-        // Agregar las Fichas (tabs)
-        for (String nombre: titulos) {
-            ActionBar.Tab tab = actionBar.newTab().setText(nombre);
-            tab.setTabListener(this);
-            actionBar.addTab(tab);
+        if (viewTag.equals("phone")) {
+            viewPager = (ViewPager) findViewById(R.id.pager);
+            actionBar = getActionBar();
+            TabsPagerAdapter adapter = new TabsPagerAdapter(getFragmentManager());
+
+            viewPager.setAdapter(adapter);
+            actionBar.setHomeButtonEnabled(false);
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+            // Agregar las Fichas (tabs)
+            String[] titulos = {"Crear Contacto","Lista de Contactos"};
+            for (String nombre: titulos) {
+                ActionBar.Tab tab = actionBar.newTab().setText(nombre);
+                tab.setTabListener(this);
+                actionBar.addTab(tab);
+            }
+            viewPager.setOnPageChangeListener(this);
         }
-        viewPager.setOnPageChangeListener(this);
+
+
     }
 
 

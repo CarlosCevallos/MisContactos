@@ -1,24 +1,25 @@
 package aynimake.com.miscontactos;
 
 import android.app.ActionBar;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
-import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageButton;
 
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 
 import aynimake.com.miscontactos.util.DatabaseHelper;
-import aynimake.com.miscontactos.util.TabsPagerAdapter;
 
 
 
-public class MainActivity extends OrmLiteBaseActivity<DatabaseHelper>
-        implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
+public class MainActivity extends OrmLiteBaseActivity<DatabaseHelper> implements View.OnTouchListener{
 
-    // Control de Fichas (tabs)
-    private ViewPager viewPager;
+    private ImageButton btnCrearContacto, btnListaContactos, btnEliminarContactos, btnSincronizar;
+    private CrearContactoFragment fragmentoCrear;
+    private ListaContactosFragment fragmentoLista;
     private ActionBar actionBar;
 
 
@@ -27,70 +28,77 @@ public class MainActivity extends OrmLiteBaseActivity<DatabaseHelper>
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        inicializarTabs();
+        inicializaActionBar();
+        inicializaComponentes();
     }
 
-    private void inicializarTabs() {
+    private void inicializaActionBar() {
+        actionBar = getActionBar();
+        actionBar.setHomeButtonEnabled(false);
+    }
 
-        View view = findViewById(R.id.pager);  // El mismo id carga el xml de la "tablet" y el del "phone"
-        String viewTag = String.valueOf(view.getTag());
-        Log.d(getClass().getSimpleName(), String.format("Layout: %s", viewTag));
+    private void inicializaComponentes() {
+        btnCrearContacto = (ImageButton) findViewById(R.id.btn_crear_contacto);
+        btnCrearContacto.setOnTouchListener(this);
 
-        if (viewTag.equals("phone")) {
-            viewPager = (ViewPager) findViewById(R.id.pager);
-            actionBar = getActionBar();
-            TabsPagerAdapter adapter = new TabsPagerAdapter(getFragmentManager());
+        btnListaContactos = (ImageButton) findViewById(R.id.btn_lista_contactos);
+        btnListaContactos.setOnTouchListener(this);
 
-            viewPager.setAdapter(adapter);
-            actionBar.setHomeButtonEnabled(false);
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        btnEliminarContactos = (ImageButton) findViewById(R.id.btn_eliminar_contactos);
+        btnEliminarContactos.setOnTouchListener(this);
 
-            // Agregar las Fichas (tabs)
-            String[] titulos = {"Crear Contacto","Lista de Contactos"};
-            for (String nombre: titulos) {
-                ActionBar.Tab tab = actionBar.newTab().setText(nombre);
-                tab.setTabListener(this);
-                actionBar.addTab(tab);
-            }
-            viewPager.setOnPageChangeListener(this);
+        btnSincronizar = (ImageButton) findViewById(R.id.btn_sincronizar);
+        btnSincronizar.setOnTouchListener(this);
+
+        cargarFragmento(getFragmentoLista());
+    }
+
+
+    //<editor-fold desc="METODOS GET DE INICIALIZACION BAJO DEMANDA  (LAZY INITIALIZATION)">
+    public CrearContactoFragment getFragmentoCrear() {
+        if (fragmentoCrear == null) fragmentoCrear = new CrearContactoFragment();
+        return fragmentoCrear;
+    }
+
+    public ListaContactosFragment getFragmentoLista() {
+        if (fragmentoLista == null) fragmentoLista = new ListaContactosFragment();
+        return fragmentoLista;
+    }
+    //</editor-fold>
+
+
+    private void cargarFragmento(Fragment fragmento) {
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.contenedor, fragmento);
+        transaction.commit();
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent evt) {
+        ImageButton btn = (ImageButton) view;
+        int actionMasked = evt.getActionMasked();
+        switch (actionMasked) {
+            case  MotionEvent.ACTION_DOWN:
+                btn.setColorFilter(R.color.entintado_oscuro);
+                btn.invalidate();
+                cambiarFragmento(btn);
+                break;
+            case  MotionEvent.ACTION_UP:
+                btn.clearColorFilter();
+                btn.invalidate();
+                break;
         }
 
-
+        return true;
     }
 
-
-    //<editor-fold desc="Metodos TAB CHANGE LISTENER">
-    @Override
-    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-        viewPager.setCurrentItem(tab.getPosition());
+    private void cambiarFragmento(View view) {
+        switch (view.getId()) {
+            case R.id.btn_crear_contacto: cargarFragmento(getFragmentoCrear()); break;
+            case R.id.btn_lista_contactos: cargarFragmento(getFragmentoLista()); break;
+            case R.id.btn_eliminar_contactos: break;  // TODO: implementar eliminar
+            case R.id.btn_sincronizar: break;  // TODO: implementar sincronizacion
+        }
     }
-
-    @Override
-    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-
-    }
-
-    @Override
-    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-
-    }
-    //</editor-fold>
-
-    //<editor-fold desc="Metodos VIEW CHANGE LISTENER">
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        actionBar.setSelectedNavigationItem(position);
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
-    }
-    //</editor-fold>
-
 }

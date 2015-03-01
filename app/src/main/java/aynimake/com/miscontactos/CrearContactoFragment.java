@@ -122,7 +122,7 @@ public class CrearContactoFragment extends Fragment implements View.OnClickListe
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK && requestCode == request_code) {
             Uri uri = data.getData();
-            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 int takeFlags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 ContentResolver resolver = getActivity().getContentResolver();
                 resolver.takePersistableUriPermission(uri, takeFlags);

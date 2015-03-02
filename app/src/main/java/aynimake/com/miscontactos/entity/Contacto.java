@@ -1,4 +1,4 @@
-package aynimake.com.miscontactos.util;
+package aynimake.com.miscontactos.entity;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;

@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import aynimake.com.miscontactos.util.ContactReceiver;
-import aynimake.com.miscontactos.util.Contacto;
+import aynimake.com.miscontactos.entity.Contacto;
 import aynimake.com.miscontactos.util.TextChangedListener;
 
 /**
@@ -26,7 +26,7 @@ import aynimake.com.miscontactos.util.TextChangedListener;
 public class CrearContactoFragment extends Fragment implements View.OnClickListener {
     private EditText txtNombre, txtTelefono, txtEmail, txtDireccion;
     private ImageView imgViewContacto;
-    private Button btnAgregar;
+    private Button btnGuardar, btnCancelar;
     private int request_code = 1;
 
     @Override
@@ -49,56 +49,69 @@ public class CrearContactoFragment extends Fragment implements View.OnClickListe
         txtNombre.addTextChangedListener(new TextChangedListener() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                btnAgregar.setEnabled(!s.toString().trim().isEmpty());
+                btnGuardar.setEnabled(!s.toString().trim().isEmpty());
             }
         });
-        btnAgregar = (Button) view.findViewById(R.id.bAgregar);
-        btnAgregar.setOnClickListener(this);
+
+        btnGuardar = (Button) view.findViewById(R.id.btnGuardar);
+        btnGuardar.setOnClickListener(this);
+
+        btnCancelar = (Button) view.findViewById(R.id.btnCancelar);
+        btnCancelar.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
-        if (view == btnAgregar){
-            agregarContacto(
-                    txtNombre.getText().toString().trim(),
-                    txtTelefono.getText().toString().trim(),
-                    txtEmail.getText().toString().trim(),
-                    txtDireccion.getText().toString().trim(),
-                    String.valueOf(imgViewContacto.getTag())  // Obtenemos el atributo TAG con la Uri de la Imagen
-            );
-
-            String msj = String.format("%s ha sido agregado a la lista!", txtNombre.getText());
-            Toast.makeText(view.getContext(), msj, Toast.LENGTH_SHORT).show();
-
-            msj = "Imagen: "+ String.valueOf(imgViewContacto.getTag());
-            Toast.makeText(view.getContext(), msj, Toast.LENGTH_LONG).show();
-
-            btnAgregar.setEnabled(false);
-            limpiarCampos();
-        } else if (view == imgViewContacto){
-            Intent intent = null;
-
-            /* Verificamos la version de la plataforma
-               ...a partir de la v4.4 Kikat (api 19) cambio la seguridad.
-            */
-            if (Build.VERSION.SDK_INT < 19) {
-                // Android JellyBean 4.3 y anteriores
-                intent = new Intent();
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-            } else {
-                // Android Kitkat 4.4 y posteriores
-                intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-            }
-            intent.setType("image/*");
-            startActivityForResult(intent, request_code);
+        switch (view.getId()){
+            case R.id.btnGuardar: guardarContacto(view); break;
+            case R.id.btnCancelar: limpiarCampos(); break;
+            case R.id.imgViewContacto: cargarImagen(); break;
         }
+
+    }
+
+    private void cargarImagen() {
+        Intent intent = null;
+
+        /* Verificamos la version de la plataforma
+           ...a partir de la v4.4 Kikat (api 19) cambio la seguridad.
+        */
+        if (Build.VERSION.SDK_INT < 19) {
+            // Android JellyBean 4.3 y anteriores
+            intent = new Intent();
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+        } else {
+            // Android Kitkat 4.4 y posteriores
+            intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+        }
+        intent.setType("image/*");
+        startActivityForResult(intent, request_code);
+    }
+
+    private void guardarContacto(View view) {
+        agregarContacto(
+                txtNombre.getText().toString().trim(),
+                txtTelefono.getText().toString().trim(),
+                txtEmail.getText().toString().trim(),
+                txtDireccion.getText().toString().trim(),
+                String.valueOf(imgViewContacto.getTag())  // Obtenemos el atributo TAG con la Uri de la Imagen
+        );
+
+        String msj = String.format("%s ha sido agregado a la lista!", txtNombre.getText());
+        Toast.makeText(view.getContext(), msj, Toast.LENGTH_SHORT).show();
+
+        msj = "Imagen: "+ String.valueOf(imgViewContacto.getTag());
+        Toast.makeText(view.getContext(), msj, Toast.LENGTH_LONG).show();
+
+        btnGuardar.setEnabled(false);
+        limpiarCampos();
     }
 
     private void agregarContacto(String nombre, String telefono, String email, String direccion, String imageUri) {
         Contacto nuevo = new Contacto(nombre, telefono, email, direccion, imageUri);
 
-        Intent intent = new Intent("listacontactos");
+        Intent intent = new Intent(ContactReceiver.FILTER_NAME);
         intent.putExtra("operacion", ContactReceiver.CONTACTO_AGREGADO);
         intent.putExtra("datos", nuevo);
 

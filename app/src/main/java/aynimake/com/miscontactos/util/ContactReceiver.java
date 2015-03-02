@@ -10,11 +10,14 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 import java.util.ArrayList;
 
+import aynimake.com.miscontactos.entity.Contacto;
+
 /**
  * Created by Toshiba on 11/02/2015.
  */
 public class ContactReceiver extends BroadcastReceiver {
 
+    public static final String FILTER_NAME = "listacontactos";
     public static final int CONTACTO_AGREGADO = 1;
     public static final int CONTACTO_ELIMINADO = 2;
     public static final int CONTACTO_ACTUALIZADO = 3;

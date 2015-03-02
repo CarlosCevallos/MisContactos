@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 import aynimake.com.miscontactos.util.ContactListAdapter;
 import aynimake.com.miscontactos.util.ContactReceiver;
-import aynimake.com.miscontactos.util.Contacto;
+import aynimake.com.miscontactos.entity.Contacto;
 import aynimake.com.miscontactos.util.DatabaseHelper;
 
 /**

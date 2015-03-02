@@ -13,6 +13,7 @@ import com.j256.ormlite.table.TableUtils;
 import java.sql.SQLException;
 
 import aynimake.com.miscontactos.R;
+import aynimake.com.miscontactos.entity.Contacto;
 
 /**
  * Esta clase es utilizada para administrar la CREACION y ACTUALIZACION de tu Base de Datos.

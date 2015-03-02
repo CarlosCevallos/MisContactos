@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import aynimake.com.miscontactos.R;
+import aynimake.com.miscontactos.entity.Contacto;
 
 /**
  * Created by Toshiba on 04/02/2015.

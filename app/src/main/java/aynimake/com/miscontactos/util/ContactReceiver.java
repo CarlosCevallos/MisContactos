@@ -3,7 +3,6 @@ package aynimake.com.miscontactos.util;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.ArrayAdapter;
 
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
@@ -24,10 +23,7 @@ public class ContactReceiver extends BroadcastReceiver {
 
     private final OrmLiteBaseActivity<DatabaseHelper> activity;
 
-    private final ArrayAdapter<Contacto> adapter;
-
-    public ContactReceiver(ArrayAdapter<Contacto> adapter, OrmLiteBaseActivity<DatabaseHelper> activity) {
-        this.adapter = adapter;
+    public ContactReceiver(OrmLiteBaseActivity<DatabaseHelper> activity) {
         this.activity = activity;
     }
 
@@ -50,13 +46,17 @@ public class ContactReceiver extends BroadcastReceiver {
             RuntimeExceptionDao<Contacto, Integer> dao = helper.getContactoRuntimeDAO();
             dao.create(contacto);
         }
-        adapter.add(contacto);
+        /* Ya no esd mecesario agregar manualmente el "adapter" cada contacto, el fragment se inicializa
+           cada  vez que se muestra en pantalla, cargando los datos de SQLite.
+        */
+        //adapter.add(contacto);
     }
 
     private void eliminarContacto(Intent intent) {
         ArrayList<Contacto> lista = (ArrayList<Contacto>) intent.getSerializableExtra("datos");
 
-        for (Contacto c: lista) adapter.remove(c);
+        // TODO: Corregir eliminacion de contactos
+        //for (Contacto c: lista) adapter.remove(c);
 
         if (activity != null){
             DatabaseHelper helper = activity.getHelper();
@@ -74,8 +74,9 @@ public class ContactReceiver extends BroadcastReceiver {
             dao.update(contacto);
         }
 
-        int posicion = adapter.getPosition(contacto);
-        adapter.insert(contacto, posicion);
+        // TODO: Corregir edicion de contactos
+        //int posicion = adapter.getPosition(contacto);
+        //adapter.insert(contacto, posicion);
     }
 
 

@@ -9,31 +9,32 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 import java.util.ArrayList;
 
+import aynimake.com.miscontactos.entity.Contacto;
 import aynimake.com.miscontactos.util.ContactListAdapter;
 import aynimake.com.miscontactos.util.ContactReceiver;
-import aynimake.com.miscontactos.entity.Contacto;
 import aynimake.com.miscontactos.util.DatabaseHelper;
+import aynimake.com.miscontactos.util.MenuBarActionReceiver;
+
+import static aynimake.com.miscontactos.util.MenuBarActionReceiver.MenuBarActionListener;
 
 /**
  * Created by Toshiba on 11/02/2015.
  */
-public class ListaContactosFragment extends Fragment {
+public class ListaContactosFragment extends Fragment implements MenuBarActionListener {
     private ArrayAdapter<Contacto> adapter;
+    private MenuBarActionReceiver receiver;
     private ListView contactsListView;
-    private ContactReceiver receiver;
 
 
     @Override
@@ -47,14 +48,19 @@ public class ListaContactosFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        receiver = new ContactReceiver(adapter, getOrmLiteBaseActivity());
-        getActivity().registerReceiver(receiver, new IntentFilter("listacontactos"));
+        receiver = new MenuBarActionReceiver(this);
+        // Solo recibira notificaciones mientras se encuentre mostrando en pantalla
+        getActivity().registerReceiver(receiver, new IntentFilter(MenuBarActionReceiver.FILTER_NAME));
+
+        //Log.d("ON RESUME", "BROADCASTERRECEIVER REGISTERED");
     }
 
     @Override
     public void onPause() {
         super.onPause();
         getActivity().unregisterReceiver(receiver);
+
+        //Log.d("ON PAUSE", "BROADCASTERRECEIVER UNREGISTERED");
     }
 
     private void inicializarComponentes(View view) {
@@ -81,56 +87,45 @@ public class ListaContactosFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_main, menu);
-    }
+    public void eliminarContactos() {
+        String mensaje = "¿Esta seguro de eliminar los contactos seleccionados?";
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.action_eliminar_contacto:
-                String mensaje = "¿Esta seguro de eliminar los contactos seleccionados?";
-                confirmarAccion(item, mensaje);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void confirmarAccion(final MenuItem item, String mensaje) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setIcon(R.drawable.ic_action_warning).setTitle("Confirmar Operación");
         builder.setMessage(mensaje);
         builder.setPositiveButton("SI", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                eliminarContacto(item);
+                SparseBooleanArray array = contactsListView.getCheckedItemPositions();
+                ArrayList<Contacto> seleccion = new ArrayList<Contacto>();
+
+                // Recorres el Arreglo "array"
+                for (int i=0; i < array.size(); i++){
+                    // Posicion del contacto en el adaptador
+                    int posicion = array.keyAt(i);
+                    if (array.valueAt(i)) seleccion.add(adapter.getItem(posicion));
+                }
+
+                // Segundo FOR para eliminar los contactos del "adapter"
+                // y no perder los indices en el FOR anterior.
+                for (Contacto con: seleccion) adapter.remove(con);
+
+                Intent intent = new Intent("listacontactos");
+                intent.putExtra("operacion", ContactReceiver.CONTACTO_ELIMINADO);
+                intent.putExtra("datos", seleccion);
+
+                getActivity().sendBroadcast(intent);
+
+                contactsListView.clearChoices();
             }
         });
         builder.setNegativeButton("NO", null);
         builder.show();
+
     }
 
-    // Elimina el Contacto
-    private void eliminarContacto(MenuItem item) {
-        SparseBooleanArray array = contactsListView.getCheckedItemPositions();
-        ArrayList<Contacto> seleccion = new ArrayList<Contacto>();
-
-        // Recorres el Arreglo "array"
-        for (int i=0; i < array.size(); i++){
-            // Posicion del contacto en el adaptador
-            int posicion = array.keyAt(i);
-            if (array.valueAt(i)) seleccion.add(adapter.getItem(posicion));
-        }
-
-        Intent intent = new Intent("listacontactos");
-        intent.putExtra("operacion", ContactReceiver.CONTACTO_ELIMINADO);
-        intent.putExtra("datos", seleccion);
-
-        getActivity().sendBroadcast(intent);
-
-        contactsListView.clearChoices();
+    @Override
+    public void sincronizarDatos() {
+        Toast.makeText(getActivity(), "Sincronizando Datos", Toast.LENGTH_SHORT).show();
     }
-
-
 }

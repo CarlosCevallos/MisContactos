@@ -42,7 +42,7 @@ public class CrearContactoFragment extends Fragment implements View.OnClickListe
         txtEmail = (EditText) view.findViewById(R.id.cmpEmail);
         txtDireccion = (EditText) view.findViewById(R.id.cmpDireccion);
 
-        imgViewContacto = (ImageView) view.findViewById(R.id.imgViewContacto);
+        imgViewContacto = (ImageView) view.findViewById(R.id.imgContacto);
         imgViewContacto.setOnClickListener(this);
 
         //
@@ -65,7 +65,7 @@ public class CrearContactoFragment extends Fragment implements View.OnClickListe
         switch (view.getId()){
             case R.id.btnGuardar: guardarContacto(view); break;
             case R.id.btnCancelar: limpiarCampos(); break;
-            case R.id.imgViewContacto: cargarImagen(); break;
+            case R.id.imgContacto: cargarImagen(); break;
         }
 
     }

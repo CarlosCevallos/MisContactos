@@ -13,7 +13,6 @@
         android:id="@+id/ivFotoContacto"
         android:layout_marginRight="5dp"
         android:src="@drawable/contacto"
-        android:background="@color/fondo_gris"
         android:focusable="false"
         />
 
@@ -75,10 +74,8 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="@+id/ivFotoContacto"
-        android:layout_centerHorizontal="true"
         android:clickable="false"
-        android:focusable="false"
-        android:gravity="center_vertical"/>
+        android:focusable="false"/>
 
 
 </aynimake.com.miscontactos.util.CheckableRelativeLayout>

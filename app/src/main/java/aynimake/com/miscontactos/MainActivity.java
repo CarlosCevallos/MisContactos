@@ -4,15 +4,19 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 
+import aynimake.com.miscontactos.util.ContactReceiver;
 import aynimake.com.miscontactos.util.DatabaseHelper;
-
+import aynimake.com.miscontactos.util.MenuBarActionReceiver;
 
 
 public class MainActivity extends OrmLiteBaseActivity<DatabaseHelper> implements View.OnTouchListener{
@@ -20,6 +24,7 @@ public class MainActivity extends OrmLiteBaseActivity<DatabaseHelper> implements
     private ImageButton btnCrearContacto, btnListaContactos, btnEliminarContactos, btnSincronizar;
     private CrearContactoFragment fragmentoCrear;
     private ListaContactosFragment fragmentoLista;
+    private ContactReceiver receiver;
     private ActionBar actionBar;
 
 
@@ -30,6 +35,22 @@ public class MainActivity extends OrmLiteBaseActivity<DatabaseHelper> implements
 
         inicializaActionBar();
         inicializaComponentes();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        receiver = new ContactReceiver(this);
+        registerReceiver(receiver, new IntentFilter(ContactReceiver.FILTER_NAME));
+
+        Log.d("ON RESUME", "BROADCASTERRECEIVER REGISTERED");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        unregisterReceiver(receiver);
+        Log.d("ON PAUSE", "BROADCASTERRECEIVER UNREGISTERED");
     }
 
     private void inicializaActionBar() {
@@ -97,8 +118,22 @@ public class MainActivity extends OrmLiteBaseActivity<DatabaseHelper> implements
         switch (view.getId()) {
             case R.id.btn_crear_contacto: cargarFragmento(getFragmentoCrear()); break;
             case R.id.btn_lista_contactos: cargarFragmento(getFragmentoLista()); break;
-            case R.id.btn_eliminar_contactos: break;  // TODO: implementar eliminar
-            case R.id.btn_sincronizar: break;  // TODO: implementar sincronizacion
+            case R.id.btn_eliminar_contactos: notificarEliminarContactos(); break;
+            case R.id.btn_sincronizar: notificarSincronizacion(); break;
         }
+    }
+
+    private void notificarSincronizacion() {
+        Intent intent = new Intent(MenuBarActionReceiver.FILTER_NAME);
+        intent.putExtra("operacion", MenuBarActionReceiver.SINCRONIZAR_CONTACTOS);
+
+        sendBroadcast(intent);
+    }
+
+    private void notificarEliminarContactos() {
+        Intent intent = new Intent(MenuBarActionReceiver.FILTER_NAME);
+        intent.putExtra("operacion", MenuBarActionReceiver.ELIMINAR_CONTACTOS);
+
+        sendBroadcast(intent);
     }
 }

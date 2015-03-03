@@ -7,4 +7,13 @@
             android:summary="Usuario para la sincronizacion de datos"
             android:defaultValue=""/>
     </PreferenceCategory>
+
+    <PreferenceCategory android:title="Datos del Servidor">
+        <EditTextPreference
+            android:key="server_address"
+            android:title="Servidor"
+            android:summary="Nombre o Direccion del Servidor"
+            android:defaultValue=""/>
+    </PreferenceCategory>
+
 </PreferenceScreen>

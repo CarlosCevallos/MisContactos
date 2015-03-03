@@ -6,10 +6,15 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 
@@ -23,6 +28,7 @@ public class MainActivity extends OrmLiteBaseActivity<DatabaseHelper> implements
     private ImageButton btnCrearContacto, btnListaContactos, btnEliminarContactos, btnSincronizar;
     private CrearContactoFragment fragmentoCrear;
     private ListaContactosFragment fragmentoLista;
+    private final int CONFIG_REQUEST_CODE = 0;
     private ContactReceiver receiver;
     private ActionBar actionBar;
 
@@ -119,6 +125,33 @@ public class MainActivity extends OrmLiteBaseActivity<DatabaseHelper> implements
             case R.id.btn_lista_contactos: cargarFragmento(getFragmentoLista()); break;
             case R.id.btn_eliminar_contactos: notificarEliminarContactos(); break;
             case R.id.btn_sincronizar: notificarSincronizacion(); break;
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Solo existe una opcion en el menu
+        Intent intent = new Intent();
+        intent.setClass(this, ConfiguracionActivity.class);
+        startActivityForResult(intent, CONFIG_REQUEST_CODE);
+        return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CONFIG_REQUEST_CODE) {
+            SharedPreferences shp = PreferenceManager.getDefaultSharedPreferences(this);
+
+            String username = shp.getString("username", null);
+
+            String mesg = String.format("Datos del usuario '%s'han sido guardados", username);
+            Toast.makeText(this, mesg, Toast.LENGTH_SHORT).show();
         }
     }
 

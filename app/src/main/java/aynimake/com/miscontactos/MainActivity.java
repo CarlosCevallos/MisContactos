@@ -7,7 +7,6 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
@@ -43,14 +42,14 @@ public class MainActivity extends OrmLiteBaseActivity<DatabaseHelper> implements
         receiver = new ContactReceiver(this);
         registerReceiver(receiver, new IntentFilter(ContactReceiver.FILTER_NAME));
 
-        Log.d("ON RESUME", "BROADCASTERRECEIVER REGISTERED");
+        //Log.d("ON RESUME", "BROADCASTERRECEIVER REGISTERED");
     }
 
     @Override
     public void onPause() {
         super.onPause();
         unregisterReceiver(receiver);
-        Log.d("ON PAUSE", "BROADCASTERRECEIVER UNREGISTERED");
+        //Log.d("ON PAUSE", "BROADCASTERRECEIVER UNREGISTERED");
     }
 
     private void inicializaActionBar() {

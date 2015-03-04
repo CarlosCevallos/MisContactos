@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
     <PreferenceCategory android:title="Datos de Usuario">
         <EditTextPreference
             android:key="username"
@@ -14,6 +15,13 @@
             android:title="Servidor"
             android:summary="Nombre o Direccion del Servidor"
             android:defaultValue=""/>
+
+        <EditTextPreference
+            android:key="server_port"
+            android:inputType="number"
+            android:title="Puerto"
+            android:summary="Puerto de Comunicación"
+            android:defaultValue="8084"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

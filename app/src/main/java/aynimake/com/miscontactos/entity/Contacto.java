@@ -1,16 +1,18 @@
 package aynimake.com.miscontactos.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import java.io.Serializable;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 @DatabaseTable(tableName = "contacto")
-public class Contacto extends JSONBean implements Serializable {
+public class Contacto extends JSONBean {
 
     @JsonProperty
-    private Integer serverId;
+    @DatabaseField
+    private int serverId;
 
     @JsonProperty("androidId")
     @DatabaseField(generatedId = true)
@@ -58,6 +60,17 @@ public class Contacto extends JSONBean implements Serializable {
         procesarHashMD5();
     }
 
+    public Contacto(String nombre, String telefono, String email, String direccion, String imageUri, String propietario) {
+        this.nombre = nombre;
+        this.telefono = telefono;
+        this.email = email;
+        this.direccion = direccion;
+        this.imageUri = imageUri;
+        this.propietario = propietario;
+
+        procesarHashMD5();
+    }
+
     //<editor-fold desc="GETTER METHODS">
     public int getId() {
         return id;
@@ -83,6 +96,10 @@ public class Contacto extends JSONBean implements Serializable {
 
     public String getPropietario() {
         return propietario;
+    }
+
+    public int getServerId() {
+        return serverId;
     }
     //</editor-fold>
 
@@ -127,6 +144,12 @@ public class Contacto extends JSONBean implements Serializable {
         String oldVal = this.propietario;
         this.propietario = propietario;
         support.firePropertyChange("propietario", oldVal, propietario);
+    }
+
+    public void setServerId(int serverId) {
+        int oldVal = this.serverId;
+        this.serverId = serverId;
+        support.firePropertyChange("serverId", oldVal, serverId);
     }
     //</editor-fold>
 

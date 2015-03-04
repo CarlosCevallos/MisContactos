@@ -2,12 +2,15 @@ package aynimake.com.miscontactos;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +27,7 @@ import aynimake.com.miscontactos.util.TextChangedListener;
  * Created by Toshiba on 11/02/2015.
  */
 public class CrearContactoFragment extends Fragment implements View.OnClickListener {
+
     private EditText txtNombre, txtTelefono, txtEmail, txtDireccion;
     private ImageView imgViewContacto;
     private Button btnGuardar, btnCancelar;
@@ -90,7 +94,7 @@ public class CrearContactoFragment extends Fragment implements View.OnClickListe
     }
 
     private void guardarContacto(View view) {
-        agregarContacto(
+        boolean result = agregarContacto(
                 txtNombre.getText().toString().trim(),
                 txtTelefono.getText().toString().trim(),
                 txtEmail.getText().toString().trim(),
@@ -100,24 +104,39 @@ public class CrearContactoFragment extends Fragment implements View.OnClickListe
                 // Obtenemos el atributo TAG con la Uri de la Imagen
         );
 
-        String msj = String.format("%s ha sido agregado a la lista!", txtNombre.getText());
-        Toast.makeText(view.getContext(), msj, Toast.LENGTH_SHORT).show();
+        if (result) {
+            String msj = String.format("%s ha sido agregado a la lista!", txtNombre.getText());
+            Toast.makeText(view.getContext(), msj, Toast.LENGTH_SHORT).show();
 
-        msj = "Imagen: "+ String.valueOf(imgViewContacto.getTag());
-        Toast.makeText(view.getContext(), msj, Toast.LENGTH_LONG).show();
+            msj = "Imagen: " + String.valueOf(imgViewContacto.getTag());
+            Toast.makeText(view.getContext(), msj, Toast.LENGTH_LONG).show();
 
-        btnGuardar.setEnabled(false);
-        limpiarCampos();
+            btnGuardar.setEnabled(false);
+            limpiarCampos();
+        } else {
+            AlertDialog.Builder alert = new AlertDialog.Builder(view.getContext());
+            alert.setTitle("Error");
+            alert.setMessage("No se ha definido el usuario en las preferencias");
+            alert.setPositiveButton("OK", null);
+            alert.show();
+        }
     }
 
-    private void agregarContacto(String nombre, String telefono, String email, String direccion, String imageUri) {
-        Contacto nuevo = new Contacto(nombre, telefono, email, direccion, imageUri);
+    private boolean agregarContacto(String nombre, String telefono, String email, String direccion, String imageUri) {
+        SharedPreferences shp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String usuario = shp.getString("username", null);
+        if (usuario != null) {
+            Contacto nuevo = new Contacto(nombre, telefono, email, direccion, imageUri, usuario);
 
-        Intent intent = new Intent(ContactReceiver.FILTER_NAME);
-        intent.putExtra("operacion", ContactReceiver.CONTACTO_AGREGADO);
-        intent.putExtra("datos", nuevo);
+            Intent intent = new Intent(ContactReceiver.FILTER_NAME);
+            intent.putExtra("operacion", ContactReceiver.CONTACTO_AGREGADO);
+            intent.putExtra("datos", nuevo);
 
-        getActivity().sendBroadcast(intent);
+            getActivity().sendBroadcast(intent);
+
+            return true;
+        }
+        return false;
     }
 
     private void limpiarCampos() {

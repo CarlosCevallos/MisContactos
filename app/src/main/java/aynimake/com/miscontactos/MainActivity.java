@@ -58,11 +58,6 @@ public class MainActivity extends OrmLiteBaseActivity<DatabaseHelper> implements
         //Log.d("ON PAUSE", "BROADCASTERRECEIVER UNREGISTERED");
     }
 
-    private void inicializaActionBar() {
-        actionBar = getActionBar();
-        actionBar.setHomeButtonEnabled(false);
-    }
-
     private void inicializaComponentes() {
         btnCrearContacto = (ImageButton) findViewById(R.id.btn_crear_contacto);
         btnCrearContacto.setOnTouchListener(this);
@@ -77,6 +72,11 @@ public class MainActivity extends OrmLiteBaseActivity<DatabaseHelper> implements
         btnSincronizar.setOnTouchListener(this);
 
         cargarFragmento(getFragmentoLista());
+    }
+
+    private void inicializaActionBar() {
+        actionBar = getActionBar();
+        actionBar.setHomeButtonEnabled(false);
     }
 
 
@@ -150,7 +150,7 @@ public class MainActivity extends OrmLiteBaseActivity<DatabaseHelper> implements
 
             String username = shp.getString("username", null);
 
-            String mesg = String.format("Datos del usuario '%s'han sido guardados", username);
+            String mesg = String.format("Datos del usuario '%s' guardados", username);
             Toast.makeText(this, mesg, Toast.LENGTH_SHORT).show();
         }
     }

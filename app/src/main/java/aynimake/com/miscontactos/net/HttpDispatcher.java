@@ -52,7 +52,9 @@ public class HttpDispatcher {
         String url = builder.append("/owner/").append(REGISTRY_OWNER).toString();
 
         if (wifiEnabled()) {
-            // TODO: Implementar HttpGetWorker
+            HttpGetWorker<T> worker = new HttpGetWorker<T>(mapper, resulType);
+            worker.addAsyncTaskListener(listener);
+            worker.execute(url);
         } else {
             Toast.makeText(context, "WIFI no disponible !!", Toast.LENGTH_SHORT).show();
         }
@@ -64,7 +66,9 @@ public class HttpDispatcher {
         String url = builder.toString();
 
         if (wifiEnabled()) {
-            // TODO: Implementar HttpPostWorker
+            HttpPostWorker worker = new HttpPostWorker(mapper, url);
+            worker.addAsyncTaskListener(listener);
+            worker.execute(bean);
         } else {
             Toast.makeText(context, "WIFI no disponible !!", Toast.LENGTH_SHORT).show();
         }
@@ -76,7 +80,9 @@ public class HttpDispatcher {
         String url = builder.append("/").append(bean.getServerId()).toString();
 
         if (wifiEnabled()) {
-            // TODO: Implementar HttpPutWorker
+            HttpPutWorker worker = new HttpPutWorker(mapper, url);
+            worker.addAsyncTaskListener(listener);
+            worker.execute(bean);
         } else {
             Toast.makeText(context, "WIFI no disponible !!", Toast.LENGTH_SHORT).show();
         }
@@ -88,7 +94,9 @@ public class HttpDispatcher {
         String url = builder.append("/").append(bean.getServerId()).toString();
 
         if (wifiEnabled()) {
-            // TODO: Implementar HttpDeleteWorker
+            HttpDeleteWorker worker = new HttpDeleteWorker(mapper);
+            worker.addAsyncTaskListener(listener);
+            worker.execute(url);
         } else {
             Toast.makeText(context, "WIFI no disponible !!", Toast.LENGTH_SHORT).show();
         }

@@ -67,8 +67,7 @@ public class HttpGetWorker<T> extends AsyncTask<String, Void, T> {
                 data = mapper.readValue(respStr, beanClass);
             } else {
                 // TODO: Mostrar alerta al usuario, notificando del error
-                //Log.e("JSON","statusCode:"+String.valueOf(statusCode)+"  Error al cargar el documento json");
-                Log.e("JSON","Error al cargar el documento json");
+                Log.e("JSON","statusCode:"+String.valueOf(statusCode)+"  Error al cargar el documento json");
             }
         } catch (IOException ex) {
             Log.e("HttpGetWorker",ex.getLocalizedMessage(), ex);

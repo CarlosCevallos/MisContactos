@@ -22,9 +22,11 @@ public class ContactReceiver extends BroadcastReceiver {
     public static final int CONTACTO_ACTUALIZADO = 3;
 
     private final OrmLiteBaseActivity<DatabaseHelper> activity;
+    private final DataChangeTracker tracker;
 
     public ContactReceiver(OrmLiteBaseActivity<DatabaseHelper> activity) {
         this.activity = activity;
+        this.tracker = new DataChangeTracker(activity);
     }
 
     @Override
@@ -45,23 +47,20 @@ public class ContactReceiver extends BroadcastReceiver {
             DatabaseHelper helper = activity.getHelper();
             RuntimeExceptionDao<Contacto, Integer> dao = helper.getContactoRuntimeDAO();
             dao.create(contacto);
+            tracker.recordCreateOp(contacto);
         }
-        /* Ya no esd mecesario agregar manualmente el "adapter" cada contacto, el fragment se inicializa
-           cada  vez que se muestra en pantalla, cargando los datos de SQLite.
-        */
-        //adapter.add(contacto);
     }
 
     private void eliminarContacto(Intent intent) {
         ArrayList<Contacto> lista = (ArrayList<Contacto>) intent.getSerializableExtra("datos");
-
-        // TODO: Corregir eliminacion de contactos
-        //for (Contacto c: lista) adapter.remove(c);
-
         if (activity != null){
             DatabaseHelper helper = activity.getHelper();
             RuntimeExceptionDao<Contacto, Integer> dao = helper.getContactoRuntimeDAO();
-            dao.delete(lista);
+            for (Contacto contacto : lista) {
+                dao.refresh(contacto);
+                tracker.recordDeleteOp(contacto);
+                dao.delete(contacto);
+            }
         }
     }
 
@@ -72,11 +71,10 @@ public class ContactReceiver extends BroadcastReceiver {
             DatabaseHelper helper = activity.getHelper();
             RuntimeExceptionDao<Contacto, Integer> dao = helper.getContactoRuntimeDAO();
             dao.update(contacto);
+            // Por el momento la Actualizacion SOLO implica el asignar el "serverId" regresado
+            // por el servidor al insertar nuevos contactos, NO aplicaremos al tracker en esta ocasion.
+            // tracker.recordUpdateOp(contacto);
         }
-
-        // TODO: Corregir edicion de contactos
-        //int posicion = adapter.getPosition(contacto);
-        //adapter.insert(contacto, posicion);
     }
 
 

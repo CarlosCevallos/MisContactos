@@ -1,5 +1,7 @@
 package aynimake.com.miscontactos.entity;
 
+import android.os.Parcel;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.j256.ormlite.field.DatabaseField;
@@ -43,8 +45,9 @@ public class Contacto extends JSONBean {
     private String propietario;
 
 
-    /* El motor ORMLite requiere este constructor vacio para poder instanciar objetos de esta clase
-       por medio del API de Reflection  */
+    /** El motor ORMLite requiere este constructor vacio para poder instanciar objetos de esta clase
+     *  por medio del API de Reflection
+     */
     public Contacto() {
     }
 
@@ -70,6 +73,57 @@ public class Contacto extends JSONBean {
 
         procesarHashMD5();
     }
+
+
+    //<editor-fold desc="CODIGO DE SOPORTE A INTERFAZ PARCELABLE">
+    // Constante  que se crea para la tecnologia "Parcelable"
+    public static final Creator<Contacto> CREATOR = new Creator<Contacto>() {
+        @Override
+        public Contacto createFromParcel(Parcel in) {
+            return new Contacto(in);
+        }
+
+        @Override
+        public Contacto[] newArray(int size) {
+            return new Contacto[size];
+        }
+    };
+
+    // Constructor que se crea para la tecnologia "Parcelable"
+    public Contacto(Parcel in) {
+        // Es importante el ORDEN en que se guardan los "Parcel" ...
+        // porque es el mismo ORDEN en que se LEERAN
+
+        this.serverId = in.readInt();
+        this.id = in.readInt();
+        this.nombre = in.readString();
+        this.telefono = in.readString();
+        this.email = in.readString();
+        this.direccion = in.readString();
+        this.imageUri = in.readString();
+        this.propietario = in.readString();
+
+        procesarHashMD5();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(serverId);
+        dest.writeInt(id);
+        dest.writeString(nombre);
+        dest.writeString(telefono);
+        dest.writeString(email);
+        dest.writeString(direccion);
+        dest.writeString(imageUri);
+        dest.writeString(propietario);
+    }
+    //</editor-fold>
+
 
     //<editor-fold desc="GETTER METHODS">
     public int getId() {

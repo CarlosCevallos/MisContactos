@@ -3,6 +3,7 @@ package aynimake.com.miscontactos.util;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
@@ -42,7 +43,12 @@ public class ContactReceiver extends BroadcastReceiver {
     }
 
     private void agregarContacto(Intent intent) {
-        Contacto contacto = (Contacto) intent.getSerializableExtra("datos");
+        //Contacto contacto = (Contacto) intent.getSerializableExtra("datos");
+        Contacto contacto = (Contacto) intent.getParcelableExtra("datos");
+
+        // TODO: Eliminar Log despues de fase de pruebas
+        Log.d("Parcelable Contacto (a)", contacto.getServerId()+" "+contacto.getNombre()+" "+contacto.getTelefono());
+
         if (activity != null){
             DatabaseHelper helper = activity.getHelper();
             RuntimeExceptionDao<Contacto, Integer> dao = helper.getContactoRuntimeDAO();
@@ -52,7 +58,12 @@ public class ContactReceiver extends BroadcastReceiver {
     }
 
     private void eliminarContacto(Intent intent) {
-        ArrayList<Contacto> lista = (ArrayList<Contacto>) intent.getSerializableExtra("datos");
+        //ArrayList<Contacto> lista = (ArrayList<Contacto>) intent.getSerializableExtra("datos");
+        ArrayList<Contacto> lista = intent.getParcelableArrayListExtra("datos");
+
+        // TODO: Eliminar Log despues de fase de pruebas
+        Log.d("Parcelable List (e)", lista.toString());
+
         if (activity != null){
             DatabaseHelper helper = activity.getHelper();
             RuntimeExceptionDao<Contacto, Integer> dao = helper.getContactoRuntimeDAO();
@@ -65,7 +76,8 @@ public class ContactReceiver extends BroadcastReceiver {
     }
 
     private void actualizarContacto(Intent intent) {
-        Contacto contacto = (Contacto) intent.getSerializableExtra("datos");
+        //Contacto contacto = (Contacto) intent.getSerializableExtra("datos");
+        Contacto contacto = (Contacto) intent.getParcelableExtra("datos");
 
         if (activity != null){
             DatabaseHelper helper = activity.getHelper();

@@ -1,5 +1,7 @@
 package aynimake.com.miscontactos.entity;
 
+import android.os.Parcelable;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.hash.HashCode;
@@ -10,12 +12,11 @@ import com.j256.ormlite.field.DatabaseField;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.Serializable;
 
 /**
  * Created by Toshiba on 03/03/2015.
  */
-public abstract class JSONBean implements PropertyChangeListener, Serializable {
+public abstract class JSONBean implements PropertyChangeListener, Parcelable {
 
     /**
      * Propiedad para identificar cambios en el bean, para proceder a la sincronizacion

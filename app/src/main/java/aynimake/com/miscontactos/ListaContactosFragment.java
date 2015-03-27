@@ -118,7 +118,7 @@ public class ListaContactosFragment extends Fragment
 
                 Intent intent = new Intent(ContactReceiver.FILTER_NAME);
                 intent.putExtra("operacion", ContactReceiver.CONTACTO_ELIMINADO);
-                intent.putExtra("datos", seleccion);
+                intent.putParcelableArrayListExtra("datos", seleccion);
 
                 getActivity().sendBroadcast(intent);
             }

@@ -52,7 +52,7 @@ public class HttpDispatcher {
         String url = builder.append("/owner/").append(REGISTRY_OWNER).toString();
 
         if (wifiEnabled()) {
-            HttpGetWorker<T> worker = new HttpGetWorker<T>(mapper, resulType);
+            HttpGetWorker<T> worker = new HttpGetWorker<T>(mapper, resulType, context);
             worker.addAsyncTaskListener(listener);
             worker.execute(url);
         } else {
@@ -66,7 +66,7 @@ public class HttpDispatcher {
         String url = builder.toString();
 
         if (wifiEnabled()) {
-            HttpPostWorker worker = new HttpPostWorker(mapper, url);
+            HttpPostWorker worker = new HttpPostWorker(mapper, url, context);
             worker.addAsyncTaskListener(listener);
             worker.execute(bean);
         } else {
@@ -80,7 +80,7 @@ public class HttpDispatcher {
         String url = builder.append("/").append(bean.getServerId()).toString();
 
         if (wifiEnabled()) {
-            HttpPutWorker worker = new HttpPutWorker(mapper, url);
+            HttpPutWorker worker = new HttpPutWorker(mapper, url, context);
             worker.addAsyncTaskListener(listener);
             worker.execute(bean);
         } else {
@@ -94,7 +94,7 @@ public class HttpDispatcher {
         String url = builder.append("/").append(bean.getServerId()).toString();
 
         if (wifiEnabled()) {
-            HttpDeleteWorker worker = new HttpDeleteWorker(mapper);
+            HttpDeleteWorker worker = new HttpDeleteWorker(mapper, context);
             worker.addAsyncTaskListener(listener);
             worker.execute(url);
         } else {

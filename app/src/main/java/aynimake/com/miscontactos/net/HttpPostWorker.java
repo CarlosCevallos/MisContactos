@@ -1,5 +1,6 @@
 package aynimake.com.miscontactos.net;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -29,11 +30,14 @@ import aynimake.com.miscontactos.util.ContactReceiver;
  * Created by Toshiba on 21/03/2015.
  */
 public class HttpPostWorker extends AsyncTask<JSONBean, Void, List<String>> {
+
+    private final ProgressDialog dialogo;
     private HashSet<AsyncTaskListener<List<String>>> listeners;
     private final ObjectMapper mapper;
     private final  String url;
 
-    public HttpPostWorker(ObjectMapper mapper, String url) {
+    public HttpPostWorker(ObjectMapper mapper, String url, Context context) {
+        this.dialogo = new ProgressDialog(context);  // Debe utilizar un contexto de un Activity, no de la aplicacion.
         this.mapper = mapper;
         this.url = url;
     }
@@ -47,10 +51,19 @@ public class HttpPostWorker extends AsyncTask<JSONBean, Void, List<String>> {
     }
 
     @Override
+    protected void onPreExecute() {
+        dialogo.setTitle("Tarea Guardar");
+        dialogo.setMessage("Guardando Datos en Servidor...");
+        dialogo.show();
+    }
+
+    @Override
     protected void onPostExecute(List<String> result) {
         for (AsyncTaskListener<List<String>> listener : listeners) {
             listener.processResult(result);
         }
+
+        if (dialogo.isShowing()) dialogo.dismiss();
     }
 
 
@@ -90,7 +103,10 @@ public class HttpPostWorker extends AsyncTask<JSONBean, Void, List<String>> {
             bean.setServerId(serverId);
 
             Intent intent = new Intent(ContactReceiver.FILTER_NAME);
+
+            intent.putExtra("operacion", ContactReceiver.CONTACTO_ACTUALIZADO);
             intent.putExtra("datos", bean);
+
             Context ctx = ApplicationContextProvider.getContext();
             ctx.sendBroadcast(intent);
         } catch (IOException ex) {

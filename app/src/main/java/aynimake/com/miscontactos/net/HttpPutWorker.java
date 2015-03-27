@@ -1,5 +1,7 @@
 package aynimake.com.miscontactos.net;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -25,11 +27,14 @@ import aynimake.com.miscontactos.util.AsyncTaskListener;
  * Created by Toshiba on 21/03/2015.
  */
 public class HttpPutWorker extends AsyncTask<JSONBean, Void, List<String>> {
+
+    private final ProgressDialog dialogo;
     private HashSet<AsyncTaskListener<List<String>>> listeners;
     private final ObjectMapper mapper;
     private final  String url;
 
-    public HttpPutWorker(ObjectMapper mapper, String url) {
+    public HttpPutWorker(ObjectMapper mapper, String url, Context context) {
+        this.dialogo = new ProgressDialog(context);  // Debe utilizar un contexto de un Activity, no de la aplicacion.
         this.mapper = mapper;
         this.url = url;
     }
@@ -43,10 +48,19 @@ public class HttpPutWorker extends AsyncTask<JSONBean, Void, List<String>> {
     }
 
     @Override
+    protected void onPreExecute() {
+        dialogo.setTitle("Tarea Actualizacion");
+        dialogo.setMessage("Actualizando Datos del Servidor...");
+        dialogo.show();
+    }
+
+    @Override
     protected void onPostExecute(List<String> result) {
         for (AsyncTaskListener<List<String>> listener : listeners) {
             listener.processResult(result);
         }
+
+        if (dialogo.isShowing()) dialogo.dismiss();
     }
 
 

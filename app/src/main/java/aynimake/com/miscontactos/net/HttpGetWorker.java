@@ -1,5 +1,7 @@
 package aynimake.com.miscontactos.net;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -23,11 +25,13 @@ import aynimake.com.miscontactos.util.AsyncTaskListener;
  */
 public class HttpGetWorker<T> extends AsyncTask<String, Void, T> {
 
+    private final ProgressDialog dialogo;
     private HashSet<AsyncTaskListener<T>> listeners;
     private final ObjectMapper mapper;
     private Class<T> beanClass;
 
-    public HttpGetWorker(ObjectMapper mapper, Class<T> beanClass) {
+    public HttpGetWorker(ObjectMapper mapper, Class<T> beanClass, Context context) {
+        this.dialogo = new ProgressDialog(context);  // Debe utilizar un contexto de un Activity, no de la aplicacion.
         this.mapper = mapper;
         this.beanClass = beanClass;
     }
@@ -39,10 +43,19 @@ public class HttpGetWorker<T> extends AsyncTask<String, Void, T> {
     }
 
     @Override
+    protected void onPreExecute() {
+        dialogo.setTitle("Tarea Descarga");
+        dialogo.setMessage("Descargando Datos del Servidor...");
+        dialogo.show();
+    }
+
+    @Override
     protected void onPostExecute(T result) {
         for (AsyncTaskListener<T> listener : listeners) {
             listener.processResult(result);
         }
+
+        if (dialogo.isShowing()) dialogo.dismiss();
     }
 
 

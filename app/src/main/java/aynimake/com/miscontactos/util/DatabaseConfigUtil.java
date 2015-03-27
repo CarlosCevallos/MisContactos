@@ -7,6 +7,9 @@ import java.sql.SQLException;
 
 /**
  * Created by Toshiba on 23/02/2015.
+ *
+ * Temporada 2
+ * Tutorial Android | Cap. 11 | ORMLite y DatabaseHelper
  */
 public class DatabaseConfigUtil extends OrmLiteConfigUtil {
 

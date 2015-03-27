@@ -1,27 +1,27 @@
 package aynimake.com.miscontactos;
 
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Fragment;
-import android.content.ContentResolver;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Toast;
+        import android.annotation.TargetApi;
+        import android.app.Activity;
+        import android.app.AlertDialog;
+        import android.app.Fragment;
+        import android.content.ContentResolver;
+        import android.content.Intent;
+        import android.content.SharedPreferences;
+        import android.net.Uri;
+        import android.os.Build;
+        import android.os.Bundle;
+        import android.preference.PreferenceManager;
+        import android.view.LayoutInflater;
+        import android.view.View;
+        import android.view.ViewGroup;
+        import android.widget.Button;
+        import android.widget.EditText;
+        import android.widget.ImageView;
+        import android.widget.Toast;
 
-import aynimake.com.miscontactos.util.ContactReceiver;
-import aynimake.com.miscontactos.entity.Contacto;
-import aynimake.com.miscontactos.util.TextChangedListener;
+        import aynimake.com.miscontactos.util.ContactReceiver;
+        import aynimake.com.miscontactos.entity.Contacto;
+        import aynimake.com.miscontactos.util.TextChangedListener;
 
 /**
  * Created by Toshiba on 11/02/2015.

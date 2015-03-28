@@ -5,8 +5,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
@@ -24,9 +22,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper{
     private static final String DATABASE_NAME = "agenda.db";
     private static final int DATABASE_VERSION = 1;
 
-    // Objetos DAO que se utilizaran para acceder a la tabla "contacto"
-    private Dao<Contacto, Integer>contactoDAO = null;
-    private RuntimeExceptionDao<Contacto, Integer> contactoRuntimeDAO = null;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
@@ -70,33 +65,5 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper{
         }
     }
 
-    /**
-     * Obtiene el objeto Data Access Object (DAO) para la entidad Contacto
-     * @return
-     * @throws SQLException
-     */
-    public Dao<Contacto, Integer> getContactoDAO() throws SQLException {
-        if (contactoDAO==null) contactoDAO = getDao(Contacto.class);
-        return contactoDAO;
-    }
 
-    /**
-     * Obtiene la version RuntimeException del objeto DAO para la entidad Contacto
-     * Los objetos "RuntimeExceptionDao" únicamente arrojan excepciones de tipo RuntimeException
-     * @return
-     */
-    public RuntimeExceptionDao<Contacto, Integer> getContactoRuntimeDAO() {
-        if (contactoRuntimeDAO==null) contactoRuntimeDAO = getRuntimeExceptionDao(Contacto.class);
-        return contactoRuntimeDAO;
-    }
-
-    /**
-     * Cierra las conexiones a la base de Datos
-     */
-    @Override
-    public void close() {
-        super.close();
-        contactoDAO = null;
-        contactoRuntimeDAO = null;
-    }
 }

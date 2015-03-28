@@ -16,6 +16,9 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 
 import aynimake.com.miscontactos.util.ContactReceiver;
@@ -167,5 +170,16 @@ public class MainActivity extends OrmLiteBaseActivity<DatabaseHelper> implements
         intent.putExtra("operacion", MenuBarActionReceiver.ELIMINAR_CONTACTOS);
 
         sendBroadcast(intent);
+    }
+
+
+    public static ObjectMapper getObjectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+
+        // Desactivar la autodeteccion y obligar al uso de "atributos" y no de "getter/setter"
+        mapper.setVisibility(PropertyAccessor.ALL,   JsonAutoDetect.Visibility.NONE);
+        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+
+        return mapper;
     }
 }

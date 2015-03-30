@@ -21,9 +21,11 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 
+import aynimake.com.miscontactos.net.HttpServiceBroker;
 import aynimake.com.miscontactos.util.ContactReceiver;
 import aynimake.com.miscontactos.util.DatabaseHelper;
 import aynimake.com.miscontactos.util.MenuBarActionReceiver;
+import aynimake.com.miscontactos.util.NotificationController;
 
 
 public class MainActivity extends OrmLiteBaseActivity<DatabaseHelper> implements View.OnTouchListener{
@@ -33,6 +35,7 @@ public class MainActivity extends OrmLiteBaseActivity<DatabaseHelper> implements
     private ListaContactosFragment fragmentoLista;
     private final int CONFIG_REQUEST_CODE = 0;
     private ContactReceiver receiver;
+    private HttpServiceBroker broker;
     private ActionBar actionBar;
 
 
@@ -49,7 +52,9 @@ public class MainActivity extends OrmLiteBaseActivity<DatabaseHelper> implements
     public void onResume() {
         super.onResume();
         receiver = new ContactReceiver(this);
+        broker = new HttpServiceBroker();
         registerReceiver(receiver, new IntentFilter(ContactReceiver.FILTER_NAME));
+        registerReceiver(broker, new IntentFilter(HttpServiceBroker.FILTER_NAME));
 
         //Log.d("ON RESUME", "BROADCASTERRECEIVER REGISTERED");
     }
@@ -58,6 +63,8 @@ public class MainActivity extends OrmLiteBaseActivity<DatabaseHelper> implements
     public void onPause() {
         super.onPause();
         unregisterReceiver(receiver);
+        unregisterReceiver(broker);
+
         //Log.d("ON PAUSE", "BROADCASTERRECEIVER UNREGISTERED");
     }
 
@@ -159,6 +166,7 @@ public class MainActivity extends OrmLiteBaseActivity<DatabaseHelper> implements
     }
 
     private void notificarSincronizacion() {
+        NotificationController.notify("Agenda", "Sincronizando datos...", 12345);
         Intent intent = new Intent(MenuBarActionReceiver.FILTER_NAME);
         intent.putExtra("operacion", MenuBarActionReceiver.SINCRONIZAR_CONTACTOS);
 

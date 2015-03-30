@@ -34,7 +34,7 @@ public class HttpServiceBroker extends BroadcastReceiver {
                 break;
             case HTTP_POST_METHOD:
                 ArrayList<JSONBean> createList = intent.getParcelableArrayListExtra("datos");
-                Log.e("HTTP_POST_METHOD", createList.toString());
+                Log.i("HTTP_POST_METHOD", createList.toString());
 
                 for (JSONBean bean : createList) {
                     intent.putExtra("url", base_url_address);
@@ -45,24 +45,24 @@ public class HttpServiceBroker extends BroadcastReceiver {
                 break;
             case HTTP_PUT_METHOD:
                 ArrayList<JSONBean> updateList = intent.getParcelableArrayListExtra("datos");
-                Log.e("HTTP_PUT_METHOD", updateList.toString());
+                Log.i("HTTP_PUT_METHOD", updateList.toString());
 
                 for (JSONBean bean : updateList) {
                     intent.putExtra("url", String.format("%s/%d", base_url_address, bean.getServerId()));
                     intent.putExtra("bean", bean);
 
-                    performRequest(context, intent, HttpPostService.class);
+                    performRequest(context, intent, HttpPutService.class);
                 }
                 break;
             case HTTP_DELETE_METHOD:
                 ArrayList<JSONBean> deleteList = intent.getParcelableArrayListExtra("datos");
-                Log.e("HTTP_DELETE_METHOD", deleteList.toString());
+                Log.i("HTTP_DELETE_METHOD", deleteList.toString());
 
                 for (JSONBean bean : deleteList) {
                     intent.putExtra("url", String.format("%s/%d", base_url_address, bean.getServerId()));
                     intent.putExtra("bean", bean);
 
-                    performRequest(context, intent, HttpPostService.class);
+                    performRequest(context, intent, HttpDeleteService.class);
                 }
                 break;
         }

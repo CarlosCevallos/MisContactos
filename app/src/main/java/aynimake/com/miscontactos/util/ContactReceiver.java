@@ -1,16 +1,17 @@
 package aynimake.com.miscontactos.util;
 
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
-import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 import java.util.ArrayList;
 
 import aynimake.com.miscontactos.entity.Contacto;
+import aynimake.com.miscontactos.entity.ContactoContract;
 
 /**
  * Created by Toshiba on 11/02/2015.
@@ -44,14 +45,13 @@ public class ContactReceiver extends BroadcastReceiver {
 
     private void agregarContacto(Intent intent) {
         Contacto contacto = (Contacto) intent.getParcelableExtra("datos");
-
-        // TODO: Eliminar Log despues de fase de pruebas
-        Log.d("Parcelable Contacto (a)", contacto.getServerId()+" "+contacto.getNombre()+" "+contacto.getTelefono());
-
         if (activity != null){
-            DatabaseHelper helper = activity.getHelper();
+            Context context = ApplicationContextProvider.getContext();
+            ContentResolver resolver = context.getContentResolver();
+            resolver.insert(ContactoContract.CONTENT_URI, contacto.getContentValues());
+            /*DatabaseHelper helper = activity.getHelper();
             RuntimeExceptionDao<Contacto, Integer> dao = helper.getRuntimeExceptionDao(Contacto.class);
-            dao.create(contacto);
+            dao.create(contacto);*/
             tracker.recordCreateOp(contacto);
         }
     }
@@ -63,12 +63,21 @@ public class ContactReceiver extends BroadcastReceiver {
         Log.d("Parcelable List (e)", lista.toString());
 
         if (activity != null){
-            DatabaseHelper helper = activity.getHelper();
-            RuntimeExceptionDao<Contacto, Integer> dao = helper.getRuntimeExceptionDao(Contacto.class);
+            /*DatabaseHelper helper = activity.getHelper();
+            RuntimeExceptionDao<Contacto, Integer> dao = helper.getRuntimeExceptionDao(Contacto.class);*/
+
+            Context context = ApplicationContextProvider.getContext();
+            ContentResolver resolver = context.getContentResolver();
+
             for (Contacto contacto : lista) {
-                dao.refresh(contacto);
+                //dao.refresh(contacto);
                 tracker.recordDeleteOp(contacto);
-                dao.delete(contacto);
+                String whereClause = String.format("%s = '%s'", ContactoContract._ID, contacto.getId());
+                int eliminados = resolver.delete(ContactoContract.CONTENT_URI, whereClause, null);
+
+                Log.d("eliminarContacto?", String.valueOf(eliminados));
+
+                //dao.delete(contacto);
             }
         }
     }
@@ -77,9 +86,17 @@ public class ContactReceiver extends BroadcastReceiver {
         Contacto contacto = (Contacto) intent.getParcelableExtra("datos");
 
         if (activity != null){
-            DatabaseHelper helper = activity.getHelper();
+            /*DatabaseHelper helper = activity.getHelper();
             RuntimeExceptionDao<Contacto, Integer> dao = helper.getRuntimeExceptionDao(Contacto.class);
-            dao.update(contacto);
+            dao.update(contacto);*/
+
+            Context context = ApplicationContextProvider.getContext();
+            ContentResolver resolver = context.getContentResolver();
+            String whereClause = String.format("%s = '%s'", ContactoContract._ID, contacto.getId());
+            int actualizados = resolver.update(ContactoContract.CONTENT_URI, contacto.getContentValues(), whereClause, null);
+
+            Log.d("actualizarContacto?", String.valueOf(actualizados));
+
             // Por el momento la Actualizacion SOLO implica el asignar el "serverId" regresado
             // por el servidor al insertar nuevos contactos, NO aplicaremos al tracker en esta ocasion.
             // tracker.recordUpdateOp(contacto);

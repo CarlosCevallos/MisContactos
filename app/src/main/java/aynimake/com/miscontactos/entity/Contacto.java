@@ -1,13 +1,27 @@
 package aynimake.com.miscontactos.entity;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.os.Parcel;
+import android.provider.BaseColumns;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.tojc.ormlite.android.annotation.AdditionalAnnotation;
+import com.tojc.ormlite.android.annotation.AdditionalAnnotation.DefaultContentMimeTypeVnd;
+import com.tojc.ormlite.android.annotation.AdditionalAnnotation.DefaultSortOrder;
+
+import java.util.ArrayList;
+
+import static com.tojc.ormlite.android.annotation.AdditionalAnnotation.Contract;
 
 
+@Contract
+@AdditionalAnnotation.DefaultContentUri(authority = "aynimake.com.miscontactos", path = "contacto")
+@DefaultContentMimeTypeVnd(name = "aynimake.com.miscontactos.provider", type = "contacto")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @DatabaseTable(tableName = "contacto")
 public class Contacto extends JSONBean {
@@ -16,8 +30,9 @@ public class Contacto extends JSONBean {
     @DatabaseField
     private int serverId;
 
+    @DefaultSortOrder
     @JsonProperty("androidId")
-    @DatabaseField(generatedId = true)
+    @DatabaseField(columnName = BaseColumns._ID, generatedId = true, allowGeneratedIdInsert = true)
     private int id;     // Primary Key
 
     @JsonProperty
@@ -74,6 +89,55 @@ public class Contacto extends JSONBean {
         procesarHashMD5();
     }
 
+    public Contacto(ContentValues values) {
+        this.id = values.getAsInteger(ContactoContract._ID);
+        this.serverId = values.getAsInteger(ContactoContract.SERVERID);
+        this.nombre = values.getAsString(ContactoContract.NOMBRE);
+        this.telefono = values.getAsString(ContactoContract.TELEFONO);
+        this.email = values.getAsString(ContactoContract.EMAIL);
+        this.direccion = values.getAsString(ContactoContract.DIRECCION);
+        this.imageUri = values.getAsString(ContactoContract.IMAGEURI);
+        this.propietario = values.getAsString(ContactoContract.PROPIETARIO);
+
+        procesarHashMD5();
+    }
+
+    // Desde objeto "ContentValues" a objeto "Contacto"
+    public static ArrayList<Contacto> crearListaDeCursor(Cursor cursor) {
+        ArrayList<Contacto> lista = new ArrayList<Contacto>();
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                ContentValues values = new ContentValues();
+                DatabaseUtils.cursorRowToContentValues(cursor, values);
+                Contacto contacto = new Contacto(values);
+
+                contacto.procesarHashMD5();
+
+                cursor.moveToNext();
+
+                lista.add(contacto);
+            }
+        }
+        return lista;
+    }
+
+    // Desde objeto "Contacto" a objeto "ContentValues"
+    @Override
+    public ContentValues getContentValues() {
+        ContentValues values = new ContentValues();
+
+        values.put(ContactoContract._ID, id);
+        values.put(ContactoContract.SERVERID, serverId);
+        values.put(ContactoContract.NOMBRE, nombre);
+        values.put(ContactoContract.TELEFONO, telefono);
+        values.put(ContactoContract.EMAIL, email);
+        values.put(ContactoContract.DIRECCION, direccion);
+        values.put(ContactoContract.IMAGEURI, imageUri);
+        values.put(ContactoContract.PROPIETARIO, propietario);
+        values.put("md5", md5);
+
+        return values;
+    }
 
     //<editor-fold desc="CODIGO DE SOPORTE A INTERFAZ PARCELABLE">
     // Constante  que se crea para la tecnologia "Parcelable"

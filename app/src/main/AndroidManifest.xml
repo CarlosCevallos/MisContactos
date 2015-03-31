@@ -30,6 +30,11 @@
         <service android:name=".net.HttpPostService" android:enabled="true"/>
         <service android:name=".net.HttpPutService" android:enabled="true"/>
         <service android:name=".net.HttpDeleteService" android:enabled="true"/>
+        
+        <provider
+            android:authorities="aynimake.com.miscontactos"
+            android:name=".entity.ContactoProvider"
+            android:exported="false" />
 
     </application>
 

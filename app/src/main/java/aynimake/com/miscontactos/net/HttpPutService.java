@@ -20,12 +20,14 @@ import java.util.HashMap;
 
 import aynimake.com.miscontactos.MainActivity;
 import aynimake.com.miscontactos.entity.JSONBean;
+import aynimake.com.miscontactos.util.NotificationController;
 
 /**
  * Created by Toshiba on 30/03/2015.
  */
 public class HttpPutService extends IntentService {
 
+    public final int NOTIFICATION_ID = HttpServiceBroker.SYNC_SERVICE_NOTIFICATION_ID + HttpServiceBroker.HTTP_PUT_METHOD;
     private final ObjectMapper mapper;
 
     public HttpPutService() {
@@ -51,10 +53,7 @@ public class HttpPutService extends IntentService {
                 HttpEntity entity = resp.getEntity();
                 String respStr = EntityUtils.toString(entity);
 
-                // TODO: Eliminar Log e implementar una notificacion al usuario
-                Log.i("HTTP PUT JSON STRING", respStr);
-
-                processResponse(respStr);
+                processResponse(intent, respStr);
             } else {
                 Log.e("JSON", "Error al leer la respuesta. ERROR => "+String.valueOf(statusCode));
             }
@@ -63,9 +62,20 @@ public class HttpPutService extends IntentService {
         }
     }
 
-    private void processResponse(String respStr) throws IOException {
+    private void processResponse(Intent intent, String respStr) throws IOException {
         HashMap<String, String> data = mapper.readValue(respStr, HashMap.class);
 
-        // TODO: Implementar codigo del mapa (alguna notificacion al usuario)
+        // TODO: Eliminar Log.i despues de la fase de pruebas
+        Log.i("HTTP_PUT RESPONSE:", String.valueOf(data));
+
+        notificarRespuesta(intent);
     }
+
+    private void notificarRespuesta(Intent intent) {
+        int maxProgress = intent.getIntExtra("maxProgress", -1);
+        int currentProgress = intent.getIntExtra("currentProgress", -1);
+        NotificationController.notify("Agenda", "Sincronizando datos modificados...",
+                NOTIFICATION_ID, currentProgress, maxProgress);
+    }
+
 }

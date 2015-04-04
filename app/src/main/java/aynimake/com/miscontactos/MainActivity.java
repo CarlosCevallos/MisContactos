@@ -25,7 +25,6 @@ import aynimake.com.miscontactos.net.HttpServiceBroker;
 import aynimake.com.miscontactos.util.ContactReceiver;
 import aynimake.com.miscontactos.util.DatabaseHelper;
 import aynimake.com.miscontactos.util.MenuBarActionReceiver;
-import aynimake.com.miscontactos.util.NotificationController;
 
 
 public class MainActivity extends OrmLiteBaseActivity<DatabaseHelper> implements View.OnTouchListener{
@@ -166,7 +165,6 @@ public class MainActivity extends OrmLiteBaseActivity<DatabaseHelper> implements
     }
 
     private void notificarSincronizacion() {
-        NotificationController.notify("Agenda", "Sincronizando datos...", 12345);
         Intent intent = new Intent(MenuBarActionReceiver.FILTER_NAME);
         intent.putExtra("operacion", MenuBarActionReceiver.SINCRONIZAR_CONTACTOS);
 

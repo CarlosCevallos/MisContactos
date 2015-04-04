@@ -1,5 +1,5 @@
 #
-# generated on 2015/03/23 06:08:40
+# generated on 2015/03/31 05:39:35
 #
 # --table-start--
 dataClass=aynimake.com.miscontactos.entity.Contacto
@@ -10,7 +10,9 @@ fieldName=serverId
 # --field-end--
 # --field-start--
 fieldName=id
+columnName=_id
 generatedId=true
+allowGeneratedIdInsert=true
 # --field-end--
 # --field-start--
 fieldName=nombre

@@ -92,7 +92,8 @@ public class HttpServiceBroker extends BroadcastReceiver {
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
-        return info != null && info.isConnected();
+        //return info != null && info.isConnected();
+        return true;  // TCUTT:  eliminar esta linea y activar la linea superior.
     }
 
     private void loadPreferences(Context context) {

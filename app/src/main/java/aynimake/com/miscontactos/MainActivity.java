@@ -164,6 +164,8 @@ public class MainActivity extends OrmLiteBaseActivity<DatabaseHelper> implements
         }
     }
 
+
+
     private void notificarSincronizacion() {
         Intent intent = new Intent(MenuBarActionReceiver.FILTER_NAME);
         intent.putExtra("operacion", MenuBarActionReceiver.SINCRONIZAR_CONTACTOS);

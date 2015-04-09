@@ -20,7 +20,7 @@ public class ContactoProvider extends OrmLiteSimpleContentProvider<DatabaseHelpe
     public boolean onCreate() {
         MatcherController controller = new MatcherController();
         controller.add(Contacto.class, MimeTypeVnd.SubType.DIRECTORY, "", ContactoContract.CONTENT_URI_PATTERN_MANY);
-        controller.add(Contacto.class, MimeTypeVnd.SubType.ITEM, "", ContactoContract.CONTENT_URI_PATTERN_ONE);
+        controller.add(Contacto.class, MimeTypeVnd.SubType.ITEM, "#", ContactoContract.CONTENT_URI_PATTERN_ONE);
         setMatcherController(controller);
 
         return true;

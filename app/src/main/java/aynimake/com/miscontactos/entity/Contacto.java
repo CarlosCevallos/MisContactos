@@ -10,8 +10,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import com.tojc.ormlite.android.annotation.AdditionalAnnotation;
 import com.tojc.ormlite.android.annotation.AdditionalAnnotation.DefaultContentMimeTypeVnd;
+import com.tojc.ormlite.android.annotation.AdditionalAnnotation.DefaultContentUri;
 import com.tojc.ormlite.android.annotation.AdditionalAnnotation.DefaultSortOrder;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ import static com.tojc.ormlite.android.annotation.AdditionalAnnotation.Contract;
 
 
 @Contract
-@AdditionalAnnotation.DefaultContentUri(authority = "aynimake.com.miscontactos", path = "contacto")
+@DefaultContentUri(authority = "aynimake.com.miscontactos", path = "contacto")
 @DefaultContentMimeTypeVnd(name = "aynimake.com.miscontactos.provider", type = "contacto")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @DatabaseTable(tableName = "contacto")
@@ -119,6 +119,18 @@ public class Contacto extends JSONBean {
             }
         }
         return lista;
+    }
+
+    public static Contacto crearInstanciaDeCursor(Cursor cursor) {
+        if (cursor.moveToNext()) {
+            ContentValues values = new ContentValues();
+            DatabaseUtils.cursorRowToContentValues(cursor, values);
+            Contacto contacto = new Contacto(values);
+
+            contacto.procesarHashMD5();
+            return contacto;
+        }
+        return null;
     }
 
     // Desde objeto "Contacto" a objeto "ContentValues"

@@ -11,7 +11,7 @@ android {
     }
     defaultConfig {
         applicationId "aynimake.com.miscontactos"
-        minSdkVersion 17
+        minSdkVersion 16
         targetSdkVersion 19
         versionCode 1
         versionName "1.0"
@@ -36,4 +36,7 @@ dependencies {
     // AGREGANDO DEPENDENCIAS PARA EL PLUGIN DE PROCESAMIENTO DE ANOTACIONES
     compile 'com.squareup.dagger:dagger:1.1.+'
     apt 'com.squareup.dagger:dagger-compiler:1.1.+'
+    compile files('libs/jackson-core-2.5.1.jar')
+    compile files('libs/jackson-databind-2.5.1.jar')
+    compile files('libs/jackson-annotations-2.5.1.jar')
 }

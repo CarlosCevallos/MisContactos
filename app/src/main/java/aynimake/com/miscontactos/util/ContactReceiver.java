@@ -3,9 +3,12 @@ package aynimake.com.miscontactos.util;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -48,26 +51,39 @@ public class ContactReceiver extends BroadcastReceiver {
         Contacto contacto = (Contacto) intent.getParcelableExtra("datos");
         ContentValues values = contacto.getContentValues();
         values.remove(ContactoContract._ID);   // Evitar insercion de id en contactos nuevos
-        resolver.insert(ContactoContract.CONTENT_URI, values);
+        Uri insertedUri = resolver.insert(ContactoContract.CONTENT_URI, values);
+
+        // Obtenemos el id del nuevo registro insertado.
+        // Se obtiene el Ultimo segmento de la url. este representa el "id" generado por el SqlLite
+        contacto.setServerId(Integer.parseInt(insertedUri.getLastPathSegment()));
+        contacto.setId(contacto.getServerId());  // TCUTT: Fuerzo a Actualizar el "Id" de SQLite
+
         tracker.recordCreateOp(contacto);
     }
 
     private void eliminarContacto(Intent intent) {
         ArrayList<Contacto> lista = intent.getParcelableArrayListExtra("datos");
         for (Contacto contacto : lista) {
-            tracker.recordDeleteOp(contacto);
-            String whereClause = String.format("%s = '%s'", ContactoContract._ID, contacto.getId());
-            int eliminados = resolver.delete(ContactoContract.CONTENT_URI, whereClause, null);
+            // Insertamos el "id" del SqlLite obtenido en "agregarContacto"
+            Uri queryUri = ContentUris.withAppendedId(ContactoContract.CONTENT_URI, contacto.getId());
+            Cursor cursor = resolver.query(queryUri, null, null, null, null, null);
+            contacto = Contacto.crearInstanciaDeCursor(cursor);
 
+            int eliminados = resolver.delete(queryUri, null, null);
             Log.d("eliminarContacto?", String.valueOf(eliminados));
+
+            tracker.recordDeleteOp(contacto);
         }
     }
 
     private void actualizarContacto(Intent intent) {
         Contacto contacto = (Contacto) intent.getParcelableExtra("datos");
+        ContentValues values = contacto.getContentValues();
+        // Evitamos modificar el ID desde este metodo
+        values.remove(ContactoContract._ID);
+        Uri updateUri = ContentUris.withAppendedId(ContactoContract.CONTENT_URI, contacto.getId());
 
-        String whereClause = String.format("%s = '%s'", ContactoContract._ID, contacto.getId());
-        int actualizados = resolver.update(ContactoContract.CONTENT_URI, contacto.getContentValues(), whereClause, null);
+        int actualizados = resolver.update(updateUri, values, null, null);
 
         Log.d("actualizarContacto?", String.valueOf(actualizados));
 

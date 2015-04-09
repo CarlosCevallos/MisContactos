@@ -105,18 +105,16 @@ public class CrearContactoFragment extends Fragment implements View.OnClickListe
         );
 
         if (result) {
-            String msj = String.format("%s ha sido agregado a la lista!", txtNombre.getText());
+            //String msj = String.format("%s ha sido agregado a la lista!", txtNombre.getText());
+            String msj = i18n(R.string.mesg_toast_contact_added, txtNombre.getText());
             Toast.makeText(view.getContext(), msj, Toast.LENGTH_SHORT).show();
-
-            msj = "Imagen: " + String.valueOf(imgViewContacto.getTag());
-            Toast.makeText(view.getContext(), msj, Toast.LENGTH_LONG).show();
 
             btnGuardar.setEnabled(false);
             limpiarCampos();
         } else {
             AlertDialog.Builder alert = new AlertDialog.Builder(view.getContext());
-            alert.setTitle("Error");
-            alert.setMessage("No se ha definido el usuario en las preferencias");
+            alert.setTitle(i18n(R.string.title_alertdialog_error));
+            alert.setMessage(i18n(R.string.mesg_alertdialog_error));
             alert.setPositiveButton("OK", null);
             alert.show();
         }
@@ -169,4 +167,7 @@ public class CrearContactoFragment extends Fragment implements View.OnClickListe
     }
 
 
+    private String i18n(int resourceId, Object ... formatArgs) {
+        return getResources().getString(resourceId, formatArgs);
+    }
 }

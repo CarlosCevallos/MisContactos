@@ -8,7 +8,7 @@
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         >
 
         <ImageView
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:inputType="textCapWords|textPersonName"
             android:ems="10"
-            android:hint="Nombre"
+            android:hint="@string/hint_cmpnombre"
             android:layout_below="@+id/imgContacto"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:inputType="phone"
             android:ems="10"
-            android:hint="Teléfono"
+            android:hint="@string/hint_cmptelefono"
             android:layout_below="@+id/cmpNombre"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:ems="10"
-            android:hint="E-mail"
+            android:hint="@string/hint_cmpemail"
             android:layout_below="@+id/cmpTelefono"
             android:layout_alignParentEnd="true"
             android:layout_alignParentLeft="true"
@@ -66,7 +66,7 @@
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"
             android:ems="10"
-            android:hint="Dirección"
+            android:hint="@string/hint_cmpdireccion"
             android:layout_below="@+id/cmpEmail"
             android:minLines="2"
             android:layout_alignParentRight="true"
@@ -77,7 +77,7 @@
             android:id="@+id/btnCancelar"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:text="Cancelar"
+            android:text="@string/text_btncancelar"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
@@ -89,7 +89,7 @@
             android:id="@+id/btnGuardar"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:text="Guardar"
+            android:text="@string/text_btnguardar"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_below="@+id/cmpDireccion"

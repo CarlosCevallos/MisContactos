@@ -1,4 +1,29 @@
 <resources>
     <string name="app_name">Agenda</string>
     <string name="action_settings">Configuración</string>
+
+    <!--Recursos fragment_crear_contacto.xml-->
+    <string name="hint_cmpnombre">Nombre</string>
+    <string name="hint_cmptelefono">Teléfono</string>
+    <string name="hint_cmpemail">E-mail</string>
+    <string name="hint_cmpdireccion">Dirección</string>
+    <string name="text_btncancelar">Cancelar</string>
+    <string name="text_btnguardar">Guardar</string>
+
+    <!--Recursos MainActivity.java-->
+    <string name="mesg_preferences_saved">Datos del usuario \'%s\' guardados</string>
+
+
+    <!--Recursos CrearContactoFragment.java-->
+    <string name="title_alertdialog_error">Error</string>
+    <string name="mesg_alertdialog_error">No se ha definido el usuario en las preferencias</string>
+    <string name="mesg_toast_contact_added">%s ha sido agregado a la lista!</string>
+
+    <!--Recursos ListaContactosFragment.java-->
+    <string name="mesg_confirm_delete">¿Esta seguro de eliminar los contactos seleccionados?</string>
+    <string name="title_alertdialog_confirm">Confirmar Operación</string>
+    <string name="mesg_positive_dialog_option">SI</string>
+    <string name="mesg_negative_dialog_option">NO</string>
+    <string name="mesg_toast_sync_confirm">Sincronizado %s</string>
+
 </resources>

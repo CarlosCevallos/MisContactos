@@ -28,7 +28,6 @@
         android:layout_toRightOf="@+id/notification_image"
         android:layout_alignTop="@+id/notification_image"
         android:gravity="center_vertical"
-        android:text="Titulo"
         android:layout_toLeftOf="@+id/notification_check"
         android:layout_marginLeft="4dp"
         android:layout_marginTop="2dp" />
@@ -39,7 +38,6 @@
         android:layout_height="wrap_content"
         style="@style/NotificationText"
         android:textColor="#d6ffffff"
-        android:text="Mensaje de texto"
         android:gravity="center_vertical"
         android:layout_below="@+id/notification_title"
         android:layout_toLeftOf="@+id/notification_check"

@@ -1,6 +1,7 @@
 package aynimake.com.miscontactos.net;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
@@ -19,7 +20,9 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import aynimake.com.miscontactos.MainActivity;
+import aynimake.com.miscontactos.R;
 import aynimake.com.miscontactos.entity.JSONBean;
+import aynimake.com.miscontactos.util.ApplicationContextProvider;
 import aynimake.com.miscontactos.util.NotificationController;
 
 /**
@@ -55,7 +58,7 @@ public class HttpPutService extends IntentService {
 
                 processResponse(intent, respStr);
             } else {
-                Log.e("JSON", "Error al leer la respuesta. ERROR => "+String.valueOf(statusCode));
+                Log.e("JSON", "Error al leer la respuesta. ERROR => "+String.valueOf(statusCode)); // No es necesario i18n en el Log
             }
         } catch (IOException ex) {
             Log.e("HttpPutService", ex.getLocalizedMessage(), ex);
@@ -74,8 +77,14 @@ public class HttpPutService extends IntentService {
     private void notificarRespuesta(Intent intent) {
         int maxProgress = intent.getIntExtra("maxProgress", -1);
         int currentProgress = intent.getIntExtra("currentProgress", -1);
-        NotificationController.notify("Agenda", "Sincronizando datos modificados...",
+        NotificationController.notify(i18n(R.string.app_name), i18n(R.string.mesg_service_sync_put),
                 NOTIFICATION_ID, currentProgress, maxProgress);
+    }
+
+
+    private String i18n(int resourceId, Object ... formatArgs) {
+        Context ctx = ApplicationContextProvider.getContext();
+        return ctx.getResources().getString(resourceId, formatArgs);
     }
 
 }

@@ -13,7 +13,9 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import aynimake.com.miscontactos.R;
 import aynimake.com.miscontactos.entity.JSONBean;
+import aynimake.com.miscontactos.util.ApplicationContextProvider;
 
 /**
  * Created by Toshiba on 30/03/2015.
@@ -84,7 +86,8 @@ public class HttpServiceBroker extends BroadcastReceiver {
             if (requestIntent.hasExtra("datos")) requestIntent.removeExtra("datos");
             context.startService(requestIntent);
         } else {
-            Toast.makeText(context, "Wifi no disponible", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, i18n(R.string.mesg_wifi_not_available),
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -105,5 +108,10 @@ public class HttpServiceBroker extends BroadcastReceiver {
         propietario = shp.getString("username", null);
     }
 
+
+    private String i18n(int resourceId, Object ... formatArgs) {
+        Context ctx = ApplicationContextProvider.getContext();
+        return ctx.getResources().getString(resourceId, formatArgs);
+    }
 
 }

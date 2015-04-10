@@ -4,7 +4,7 @@
     tools:context="aynimake.com.miscontactos.MainActivity">
 
     <item android:id="@+id/action_settings"
-          android:title="Configuración"
+          android:title="@string/title_settings_menu_item"
           android:icon="@drawable/ic_action_settings"
           android:showAsAction="always"
         />

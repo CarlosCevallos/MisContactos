@@ -18,6 +18,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 
 import aynimake.com.miscontactos.MainActivity;
+import aynimake.com.miscontactos.R;
 import aynimake.com.miscontactos.entity.JSONBean;
 import aynimake.com.miscontactos.util.ApplicationContextProvider;
 import aynimake.com.miscontactos.util.ContactReceiver;
@@ -79,7 +80,14 @@ public class HttpPostService extends IntentService {
     private void notificarRespuesta(Intent intent) {
         int maxProgress = intent.getIntExtra("maxProgress", -1);
         int currentProgress = intent.getIntExtra("currentProgress", -1);
-        NotificationController.notify("Agenda", "Sincronizando datos creados...",
+        NotificationController.notify(i18n(R.string.app_name), i18n(R.string.mesg_service_sync_pos),
                 NOTIFICATION_ID, currentProgress, maxProgress);
     }
+
+
+    private String i18n(int resourceId, Object ... formatArgs) {
+        Context ctx = ApplicationContextProvider.getContext();
+        return ctx.getResources().getString(resourceId, formatArgs);
+    }
+
 }

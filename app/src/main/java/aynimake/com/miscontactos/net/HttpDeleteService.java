@@ -1,6 +1,7 @@
 package aynimake.com.miscontactos.net;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
@@ -18,6 +19,8 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import aynimake.com.miscontactos.MainActivity;
+import aynimake.com.miscontactos.R;
+import aynimake.com.miscontactos.util.ApplicationContextProvider;
 import aynimake.com.miscontactos.util.NotificationController;
 
 /**
@@ -67,8 +70,14 @@ public class HttpDeleteService extends IntentService {
     private void notificarRespuesta(Intent intent) {
         int maxProgress = intent.getIntExtra("maxProgress", -1);
         int currentProgress = intent.getIntExtra("currentProgress", -1);
-        NotificationController.notify("Agenda", "Sincronizando datos eliminados...",
+        NotificationController.notify(i18n(R.string.app_name), i18n(R.string.mesg_service_sync_del),
                 NOTIFICATION_ID, currentProgress, maxProgress);
+    }
+
+
+    private String i18n(int resourceId, Object ... formatArgs) {
+        Context ctx = ApplicationContextProvider.getContext();
+        return ctx.getResources().getString(resourceId, formatArgs);
     }
 
 }

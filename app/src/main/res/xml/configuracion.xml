@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="Datos de Usuario">
+    <PreferenceCategory android:title="@string/title_user_category">
         <EditTextPreference
             android:key="username"
-            android:title="Nombre de Usuario"
-            android:summary="Usuario para la sincronizacion de datos"
+            android:title="@string/title_config_username"
+            android:summary="@string/summary_config_username"
             android:defaultValue=""/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Datos del Servidor">
+    <PreferenceCategory android:title="@string/title_server_category">
         <EditTextPreference
             android:key="server_address"
-            android:title="Servidor"
-            android:summary="Nombre o Direccion del Servidor"
+            android:title="@string/title_config_server"
+            android:summary="@string/summary_config_server"
             android:defaultValue=""/>
 
         <EditTextPreference
             android:key="server_port"
             android:inputType="number"
-            android:title="Puerto"
-            android:summary="Puerto de Comunicación"
+            android:title="@string/title_config_port"
+            android:summary="@string/summary_config_port"
             android:defaultValue="8084"/>
     </PreferenceCategory>
 

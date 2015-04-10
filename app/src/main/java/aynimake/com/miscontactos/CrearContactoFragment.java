@@ -7,6 +7,7 @@ package aynimake.com.miscontactos;
         import android.content.ContentResolver;
         import android.content.Intent;
         import android.content.SharedPreferences;
+        import android.graphics.Bitmap;
         import android.net.Uri;
         import android.os.Build;
         import android.os.Bundle;
@@ -18,6 +19,8 @@ package aynimake.com.miscontactos;
         import android.widget.EditText;
         import android.widget.ImageView;
         import android.widget.Toast;
+
+        import com.squareup.picasso.Picasso;
 
         import aynimake.com.miscontactos.util.ContactReceiver;
         import aynimake.com.miscontactos.entity.Contacto;
@@ -52,8 +55,8 @@ public class CrearContactoFragment extends Fragment implements View.OnClickListe
         //
         txtNombre.addTextChangedListener(new TextChangedListener() {
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                btnGuardar.setEnabled(!s.toString().trim().isEmpty());
+            public void onTextChanged(CharSequence seq, int start, int before, int count) {
+                btnGuardar.setEnabled(!seq.toString().trim().isEmpty());
             }
         });
 
@@ -155,12 +158,15 @@ public class CrearContactoFragment extends Fragment implements View.OnClickListe
         if (resultCode == Activity.RESULT_OK && requestCode == request_code) {
             Uri uri = data.getData();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                int takeFlags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                int takeFlags = data.getFlags() &
+                        (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 ContentResolver resolver = getActivity().getContentResolver();
                 resolver.takePersistableUriPermission(uri, takeFlags);
             }
 
-            imgViewContacto.setImageURI(uri);
+            Picasso.with(getActivity()).load(uri).config(Bitmap.Config.ARGB_8888).fit()
+                    .placeholder(R.drawable.contacto).error(R.drawable.contacto).into(imgViewContacto);
+
             // Utilizamos el atributo TAG para almacenar la Uri al archivo seleccionado
             imgViewContacto.setTag(uri);
         }

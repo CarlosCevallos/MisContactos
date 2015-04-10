@@ -1,7 +1,7 @@
 package aynimake.com.miscontactos;
 
 import android.app.Fragment;
-import android.net.Uri;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +10,8 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import aynimake.com.miscontactos.entity.Contacto;
 
@@ -47,10 +49,10 @@ public class ContactoFragment extends Fragment implements CompoundButton.OnCheck
             viewTelefono.setText(contactoActual.getTelefono());
             viewEmail.setText(contactoActual.getEmail());
             viewDireccion.setText(contactoActual.getDireccion());
-            if (contactoActual.getImageUri() != null)
-                ivContactImage.setImageURI(Uri.parse(contactoActual.getImageUri()));
-            else
-                ivContactImage.setImageResource(R.drawable.contacto);
+
+            Picasso.with(getActivity()).load(contactoActual.getImageUri())
+                    .config(Bitmap.Config.ARGB_8888).fit().placeholder(R.drawable.contacto)
+                    .error(R.drawable.contacto).into(ivContactImage);
         }
     }
 

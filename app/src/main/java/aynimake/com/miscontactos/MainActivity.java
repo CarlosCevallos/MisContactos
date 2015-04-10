@@ -1,6 +1,7 @@
 package aynimake.com.miscontactos;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -19,17 +20,30 @@ import android.widget.Toast;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 
 import aynimake.com.miscontactos.net.HttpServiceBroker;
 import aynimake.com.miscontactos.util.ContactReceiver;
-import aynimake.com.miscontactos.util.DatabaseHelper;
 import aynimake.com.miscontactos.util.MenuBarActionReceiver;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnTouch;
 
 
-public class MainActivity extends OrmLiteBaseActivity<DatabaseHelper> implements View.OnTouchListener{
+public class MainActivity extends Activity {  // Ya no se usa el OrmLiteBaseActivity al usar ContentProvider
 
-    private ImageButton btnCrearContacto, btnListaContactos, btnEliminarContactos, btnSincronizar;
+    @InjectView(R.id.btn_crear_contacto)
+    protected ImageButton btnCrearContacto;
+
+    @InjectView(R.id.btn_lista_contactos)
+    protected ImageButton btnListaContactos;
+
+    @InjectView(R.id.btn_eliminar_contactos)
+    protected ImageButton btnEliminarContactos;
+
+    @InjectView(R.id.btn_sincronizar)
+    protected ImageButton btnSincronizar;
+
+
     private CrearContactoFragment fragmentoCrear;
     private ListaContactosFragment fragmentoLista;
     private final int CONFIG_REQUEST_CODE = 0;
@@ -42,6 +56,8 @@ public class MainActivity extends OrmLiteBaseActivity<DatabaseHelper> implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ButterKnife.inject(this);
 
         inicializaActionBar();
         inicializaComponentes();
@@ -68,18 +84,6 @@ public class MainActivity extends OrmLiteBaseActivity<DatabaseHelper> implements
     }
 
     private void inicializaComponentes() {
-        btnCrearContacto = (ImageButton) findViewById(R.id.btn_crear_contacto);
-        btnCrearContacto.setOnTouchListener(this);
-
-        btnListaContactos = (ImageButton) findViewById(R.id.btn_lista_contactos);
-        btnListaContactos.setOnTouchListener(this);
-
-        btnEliminarContactos = (ImageButton) findViewById(R.id.btn_eliminar_contactos);
-        btnEliminarContactos.setOnTouchListener(this);
-
-        btnSincronizar = (ImageButton) findViewById(R.id.btn_sincronizar);
-        btnSincronizar.setOnTouchListener(this);
-
         cargarFragmento(getFragmentoLista());
     }
 
@@ -109,7 +113,7 @@ public class MainActivity extends OrmLiteBaseActivity<DatabaseHelper> implements
         transaction.commit();
     }
 
-    @Override
+    @OnTouch({R.id.btn_crear_contacto, R.id.btn_lista_contactos, R.id.btn_eliminar_contactos, R.id.btn_sincronizar})
     public boolean onTouch(View view, MotionEvent evt) {
         ImageButton btn = (ImageButton) view;
         int actionMasked = evt.getActionMasked();

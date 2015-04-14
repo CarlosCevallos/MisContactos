@@ -46,4 +46,11 @@
     <string name="mesg_service_sync_put">Synchronizing modified data...</string>
     <string name="mesg_service_sync_del">Synchronizing data deleted...</string>
 
+
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+
+    <!--Recursos para el Widget Contador de Contactos  "contador_contactos_widget.xml"-->
+    <string name="widget_simple_titulo">Contacts Stored</string>
+
 </resources>

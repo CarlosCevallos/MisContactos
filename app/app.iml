@@ -98,5 +98,6 @@
     <orderEntry type="library" exported="" name="ormlite-content-provider-compiler-1.0.4" level="project" />
     <orderEntry type="library" exported="" name="ormlite-content-provider-library-1.0.4" level="project" />
     <orderEntry type="library" exported="" name="jackson-databind-2.5.1" level="project" />
+    <orderEntry type="module" module-name="cardui" exported="" />
   </component>
 </module>

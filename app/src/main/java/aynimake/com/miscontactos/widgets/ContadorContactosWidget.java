@@ -45,6 +45,8 @@ public class ContadorContactosWidget extends AppWidgetProvider {
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
+
+        cursor.close();
     }
 }
 

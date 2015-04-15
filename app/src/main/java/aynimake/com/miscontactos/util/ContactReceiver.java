@@ -1,7 +1,9 @@
 package aynimake.com.miscontactos.util;
 
 import android.app.Activity;
+import android.appwidget.AppWidgetManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -12,9 +14,11 @@ import android.net.Uri;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import aynimake.com.miscontactos.entity.Contacto;
 import aynimake.com.miscontactos.entity.ContactoContract;
+import aynimake.com.miscontactos.widgets.ContadorContactosWidget;
 
 /**
  * Created by Toshiba on 11/02/2015.
@@ -55,8 +59,11 @@ public class ContactReceiver extends BroadcastReceiver {
 
         // Obtenemos el id del nuevo registro insertado.
         // Se obtiene el Ultimo segmento de la url. este representa el "id" generado por el SqlLite
-        contacto.setServerId(Integer.parseInt(insertedUri.getLastPathSegment()));
-        contacto.setId(contacto.getServerId());  // TCUTT: Fuerzo a Actualizar el "Id" de SQLite
+        //contacto.setServerId(Integer.parseInt(insertedUri.getLastPathSegment()));
+        //contacto.setId(contacto.getServerId());  // TCUTT: Fuerzo a Actualizar el "Id" de SQLite
+        contacto.setId(Integer.parseInt(insertedUri.getLastPathSegment()));
+
+        notificarWidgetPorDatosModificados();
 
         tracker.recordCreateOp(contacto);
     }
@@ -76,6 +83,20 @@ public class ContactReceiver extends BroadcastReceiver {
 
             cursor.close();
         }
+        notificarWidgetPorDatosModificados();
+    }
+
+    private void notificarWidgetPorDatosModificados() {
+        ComponentName cname = new ComponentName(context, ContadorContactosWidget.class);
+        AppWidgetManager manager = AppWidgetManager.getInstance(context);
+
+        // Obtenemos los IDs de nuestro widget, ya que puede haber mas de una instancia en pantallas
+        int[] widgetIds = manager.getAppWidgetIds(cname);
+
+        // TODO: Eliminar este log al terminar fase de desarrollo
+        Log.d("Widgets IDs", Arrays.toString(widgetIds));
+
+        ContadorContactosWidget.updateAppWidget(context, manager, widgetIds);
     }
 
     private void actualizarContacto(Intent intent) {

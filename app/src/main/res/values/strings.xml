@@ -53,4 +53,8 @@
     <!--Recursos para el Widget Contador de Contactos  "contador_contactos_widget.xml"-->
     <string name="widget_simple_titulo">Contacts Stored</string>
 
+    <!--Recursos para la barra de menu en layout de tablet "xlarge\activity_main.xml"-->
+    <string name="label_btn_remove_contact">Remove</string>
+    <string name="label_btn_sync_contact">Synchronize</string>
+
 </resources>

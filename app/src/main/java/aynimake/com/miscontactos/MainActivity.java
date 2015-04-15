@@ -84,7 +84,10 @@ public class MainActivity extends Activity {  // Ya no se usa el OrmLiteBaseActi
     }
 
     private void inicializaComponentes() {
-        cargarFragmento(getFragmentoLista());
+        View view = findViewById(R.id.rootPane);
+        String viewTag = String.valueOf(view.getTag());
+
+        if (viewTag.equals("phone")) cargarFragmento(getFragmentoLista());
     }
 
     private void inicializaActionBar() {

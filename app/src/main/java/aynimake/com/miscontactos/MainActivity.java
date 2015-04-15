@@ -175,14 +175,14 @@ public class MainActivity extends Activity {  // Ya no se usa el OrmLiteBaseActi
 
     private void notificarSincronizacion() {
         Intent intent = new Intent(MenuBarActionReceiver.FILTER_NAME);
-        intent.putExtra("operacion", MenuBarActionReceiver.SINCRONIZAR_CONTACTOS);
+        intent.putExtra("operacion", MenuBarActionReceiver.ACCION_SINCRONIZAR_CONTACTOS);
 
         sendBroadcast(intent);
     }
 
     private void notificarEliminarContactos() {
         Intent intent = new Intent(MenuBarActionReceiver.FILTER_NAME);
-        intent.putExtra("operacion", MenuBarActionReceiver.ELIMINAR_CONTACTOS);
+        intent.putExtra("operacion", MenuBarActionReceiver.ACCION_ELIMINAR_CONTACTOS);
 
         sendBroadcast(intent);
     }

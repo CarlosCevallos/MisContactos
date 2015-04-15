@@ -4,14 +4,17 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import aynimake.com.miscontactos.entity.Contacto;
+
 /**
  * Created by Toshiba on 02/03/2015.
  */
 public class MenuBarActionReceiver  extends BroadcastReceiver {
 
     public static final String FILTER_NAME = "menu_bar_action";
-    public static final int ELIMINAR_CONTACTOS = 1;
-    public static final int SINCRONIZAR_CONTACTOS = 2;
+    public static final int ACCION_CONTACTO_AGREGADO = 0;
+    public static final int ACCION_ELIMINAR_CONTACTOS = 1;
+    public static final int ACCION_SINCRONIZAR_CONTACTOS = 2;
 
     private final MenuBarActionListener listener;
 
@@ -24,12 +27,21 @@ public class MenuBarActionReceiver  extends BroadcastReceiver {
         int operacion = intent.getIntExtra("operacion",-1);
 
         switch (operacion) {
-            case ELIMINAR_CONTACTOS: listener.eliminarContactos(); break;
-            case SINCRONIZAR_CONTACTOS: listener.sincronizarDatos(); break;
+            case ACCION_CONTACTO_AGREGADO:
+                Contacto contacto = intent.getParcelableExtra("datos");
+                listener.contactoAgregado(contacto);
+                break;
+            case ACCION_ELIMINAR_CONTACTOS:
+                listener.eliminarContactos();
+                break;
+            case ACCION_SINCRONIZAR_CONTACTOS:
+                listener.sincronizarDatos();
+                break;
         }
     }
 
     public static interface MenuBarActionListener{
+        public void contactoAgregado(Contacto contacto);
         public void eliminarContactos();
         public void sincronizarDatos();
     }

@@ -63,6 +63,13 @@ public class ContactReceiver extends BroadcastReceiver {
         //contacto.setId(contacto.getServerId());  // TCUTT: Fuerzo a Actualizar el "Id" de SQLite
         contacto.setId(Integer.parseInt(insertedUri.getLastPathSegment()));
 
+        // Notificar al BroadcastReceiver de MenuBarActionReceiver para que ListaContactosFragment,
+        // reciba la notificacion de que un contacto ha sido almacenado en la base de datos.
+        Intent mbIntent = new Intent(MenuBarActionReceiver.FILTER_NAME);
+        mbIntent.putExtra("operacion", MenuBarActionReceiver.ACCION_CONTACTO_AGREGADO);
+        mbIntent.putExtra("datos", contacto);
+        context.sendBroadcast(mbIntent);
+
         notificarWidgetPorDatosModificados();
 
         tracker.recordCreateOp(contacto);

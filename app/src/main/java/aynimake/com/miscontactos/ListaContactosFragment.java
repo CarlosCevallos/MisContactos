@@ -46,7 +46,7 @@ public class ListaContactosFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_lista_contactos, container, false);
-        inicializarComponentes(rootView);
+        inicializarComponentes(savedInstanceState);
         setHasOptionsMenu(true);  // Habilita el ActionBar de este Fragment para tener botones
         return rootView;
     }
@@ -69,21 +69,23 @@ public class ListaContactosFragment extends Fragment
         //Log.d("ON PAUSE", "BROADCASTERRECEIVER UNREGISTERED");
     }
 
-    private void inicializarComponentes(View view) {
-        FragmentManager manager = getFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
+    private void inicializarComponentes( Bundle savedInstanceState ) {
+        if (savedInstanceState == null) {
+            FragmentManager manager = getFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
 
-        Context context = ApplicationContextProvider.getContext();
-        ContentResolver resolver = context.getContentResolver();
+            Context context = ApplicationContextProvider.getContext();
+            ContentResolver resolver = context.getContentResolver();
 
-        Cursor cursor = resolver.query(ContactoContract.CONTENT_URI, null, null, null, null);
-        List<Contacto> contactos = Contacto.crearListaDeCursor(cursor);
-        for (Contacto contacto: contactos) {
-            ContactoFragment cfrag = ContactoFragment.crearInstancia(contacto, this);
-            transaction.add(R.id.lista_fragmentos_contactos, cfrag);
+            Cursor cursor = resolver.query(ContactoContract.CONTENT_URI, null, null, null, null);
+            List<Contacto> contactos = Contacto.crearListaDeCursor(cursor);
+            for (Contacto contacto : contactos) {
+                ContactoFragment cfrag = ContactoFragment.crearInstancia(contacto, this);
+                transaction.add(R.id.lista_fragmentos_contactos, cfrag);
+            }
+            cursor.close();
+            transaction.commit();
         }
-        cursor.close();
-        transaction.commit();
     }
 
 

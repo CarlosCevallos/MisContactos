@@ -8,7 +8,7 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        >
+        android:background="@color/entintado_claro">
 
         <ImageView
             android:id="@+id/imgContacto"
@@ -62,7 +62,6 @@
             android:id="@+id/cmpDireccion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
             android:ems="10"
             android:hint="@string/hint_cmpdireccion"
             android:layout_below="@+id/cmpEmail"
@@ -71,7 +70,8 @@
             android:layout_toRightOf="@+id/imgContacto"
             android:layout_alignBottom="@+id/imgContacto"
             android:layout_alignRight="@+id/cmpEmail"
-            android:layout_alignEnd="@+id/cmpEmail" />
+            android:layout_alignEnd="@+id/cmpEmail"
+            android:inputType="textPostalAddress" />
 
         <Button
             android:id="@+id/btnCancelar"

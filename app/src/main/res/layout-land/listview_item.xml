@@ -84,7 +84,7 @@
                 android:id="@+id/viewDireccion"
                 android:focusable="false"
                 android:textColor="@color/texto_gris_oscuro"
-                android:textSize="12sp"
+                android:textSize="10sp"
                 android:layout_below="@+id/viewTelefono"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"

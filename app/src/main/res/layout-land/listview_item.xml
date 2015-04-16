@@ -11,6 +11,7 @@
     android:paddingTop="2dp"
     android:paddingRight="4dp"
     android:clickable="true"
+    android:animateLayoutChanges="true"
     >
 
     <RelativeLayout

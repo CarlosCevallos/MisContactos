@@ -8,6 +8,12 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.gesture.Gesture;
+import android.gesture.GestureLibraries;
+import android.gesture.GestureLibrary;
+import android.gesture.GestureOverlayView;
+import android.gesture.GestureOverlayView.OnGesturePerformedListener;
+import android.gesture.Prediction;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
@@ -21,6 +27,8 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.ArrayList;
+
 import aynimake.com.miscontactos.net.HttpServiceBroker;
 import aynimake.com.miscontactos.util.ContactReceiver;
 import aynimake.com.miscontactos.util.MenuBarActionReceiver;
@@ -29,7 +37,8 @@ import butterknife.InjectView;
 import butterknife.OnTouch;
 
 
-public class MainActivity extends Activity {  // Ya no se usa el OrmLiteBaseActivity al usar ContentProvider
+// Ya no se usa el OrmLiteBaseActivity al usar ContentProvider
+public class MainActivity extends Activity implements OnGesturePerformedListener {
 
     @InjectView(R.id.btn_crear_contacto)
     protected ImageButton btnCrearContacto;
@@ -46,6 +55,9 @@ public class MainActivity extends Activity {  // Ya no se usa el OrmLiteBaseActi
 
     private CrearContactoFragment fragmentoCrear;
     private ListaContactosFragment fragmentoLista;
+
+    private GestureLibrary gestureLib;
+
     private final int CONFIG_REQUEST_CODE = 0;
     private ContactReceiver receiver;
     private HttpServiceBroker broker;
@@ -55,12 +67,24 @@ public class MainActivity extends Activity {  // Ya no se usa el OrmLiteBaseActi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        View overlayView = inicializarVista();
+        setContentView(overlayView);
 
         ButterKnife.inject(this);
 
         inicializaActionBar();
         inicializaComponentes();
+    }
+
+    private View inicializarVista() {
+        GestureOverlayView overlay = new GestureOverlayView(this);
+        View inflate = getLayoutInflater().inflate(R.layout.activity_main, null);
+        overlay.addView(inflate);
+        overlay.addOnGesturePerformedListener(this);
+        gestureLib = GestureLibraries.fromRawResource(this, R.raw.gestures);
+        gestureLib.load();
+
+        return overlay;
     }
 
     @Override
@@ -142,6 +166,19 @@ public class MainActivity extends Activity {  // Ya no se usa el OrmLiteBaseActi
             case R.id.btn_lista_contactos: cargarFragmento(getFragmentoLista()); break;
             case R.id.btn_eliminar_contactos: notificarEliminarContactos(); break;
             case R.id.btn_sincronizar: notificarSincronizacion(); break;
+        }
+    }
+
+
+    // Recibe el evento que el usuario dibujo algo en la pantalla con el dedo
+    @Override
+    public void onGesturePerformed(GestureOverlayView gestureOverlayView, Gesture gesture) {
+        ArrayList<Prediction> predictions = gestureLib.recognize(gesture);
+        for (Prediction pred : predictions) {
+            if (pred.score > 1.0) {
+                if (pred.name.equals("eliminar")) notificarEliminarContactos();
+                else if (pred.name.equals("sincronizar")) notificarSincronizacion();
+            }
         }
     }
 

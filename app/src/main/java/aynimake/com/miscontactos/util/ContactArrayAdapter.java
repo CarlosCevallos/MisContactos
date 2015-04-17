@@ -50,7 +50,7 @@ public class ContactArrayAdapter extends ArrayAdapter<Contacto> {
 
             /*
             Cada "row" tendra su unico tag, dado que el layout es compartido por cada
-            fila que aparezca en el LinearLayout, esto optimiza recursos enormemente.
+            fila que aparezca en el ListView, esto optimiza recursos enormemente.
              */
             row.setTag(holder);
         } else {

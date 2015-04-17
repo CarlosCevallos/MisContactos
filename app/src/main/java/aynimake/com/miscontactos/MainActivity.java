@@ -81,6 +81,7 @@ public class MainActivity extends Activity implements OnGesturePerformedListener
         View inflate = getLayoutInflater().inflate(R.layout.activity_main, null);
         overlay.addView(inflate);
         overlay.addOnGesturePerformedListener(this);
+        overlay.setGestureVisible(false);  // Desabilitamos que el usuario dibuje en la pantalla
         gestureLib = GestureLibraries.fromRawResource(this, R.raw.gestures);
         gestureLib.load();
 
